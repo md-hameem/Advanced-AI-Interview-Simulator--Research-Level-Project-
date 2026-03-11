@@ -159,4 +159,53 @@ export const getReport = (interviewId: string) =>
 export const getAnalyticsOverview = () =>
   api.get<AnalyticsOverview>("/analytics/overview").then((r) => r.data);
 
+// Speech
+export interface SpeechMetrics {
+  transcript: string;
+  words_per_minute: number;
+  pause_count: number;
+  average_pause_duration: number;
+  filler_word_count: number;
+  filler_words_detected: string[];
+  filler_rate: number;
+  word_count: number;
+  confidence_score: number;
+  total_duration_seconds: number;
+  speaking_rate_variability: number;
+  pitch_mean: number;
+  pitch_std: number;
+  energy_mean: number;
+  energy_std: number;
+}
+
+export interface SpeechEvaluation extends Evaluation {
+  speech_metrics: SpeechMetrics;
+}
+
+export const submitSpeechAnswer = async (
+  interviewId: string,
+  questionId: string,
+  audioBlob: Blob
+): Promise<SpeechEvaluation> => {
+  const form = new FormData();
+  form.append("audio", audioBlob, "recording.webm");
+  const res = await axios.post<SpeechEvaluation>(
+    `${API_BASE}/speech/answer/${interviewId}/${questionId}`,
+    form,
+    { headers: { "Content-Type": "multipart/form-data" } }
+  );
+  return res.data;
+};
+
+export const analyzeSpeech = async (audioBlob: Blob): Promise<SpeechMetrics> => {
+  const form = new FormData();
+  form.append("audio", audioBlob, "recording.webm");
+  const res = await axios.post<SpeechMetrics>(
+    `${API_BASE}/speech/analyze`,
+    form,
+    { headers: { "Content-Type": "multipart/form-data" } }
+  );
+  return res.data;
+};
+
 export default api;

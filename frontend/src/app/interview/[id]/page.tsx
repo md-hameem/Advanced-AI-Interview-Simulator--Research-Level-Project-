@@ -15,21 +15,29 @@ import {
   ChevronDown,
   ChevronUp,
   Loader2,
+  Mic,
+  MicOff,
+  AudioWaveform,
+  Keyboard,
 } from "lucide-react";
 import {
   startInterview,
   submitAnswer,
+  submitSpeechAnswer,
   getHint,
   getInterview,
   type Question,
   type Evaluation,
   type Interview,
+  type SpeechMetrics,
 } from "@/lib/api";
+import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 
 interface QAEntry {
   question: Question;
   answer: string | null;
   evaluation: Evaluation | null;
+  speechMetrics?: SpeechMetrics | null;
 }
 
 export default function InterviewSessionPage({
@@ -54,6 +62,18 @@ export default function InterviewSessionPage({
   const [expandedEval, setExpandedEval] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [elapsed, setElapsed] = useState(0);
+  const [voiceMode, setVoiceMode] = useState(false);
+
+  // Voice recording
+  const {
+    isRecording,
+    duration: recordingDuration,
+    audioBlob,
+    startRecording,
+    stopRecording,
+    resetRecording,
+    error: micError,
+  } = useAudioRecorder();
 
   // Timer
   useEffect(() => {
@@ -116,7 +136,6 @@ export default function InterviewSessionPage({
     try {
       const evaluation = await submitAnswer(interviewId, currentQuestion.id, answer.trim());
 
-      // Add to history
       setHistory((prev) => [
         ...prev,
         { question: currentQuestion, answer: answer.trim(), evaluation },
@@ -127,7 +146,6 @@ export default function InterviewSessionPage({
       if (evaluation.interview_completed) {
         setCompleted(true);
         setCurrentQuestion(null);
-        // Refresh interview for final scores
         const updatedIv = await getInterview(interviewId);
         setInterview(updatedIv);
       } else if (evaluation.next_question) {
@@ -135,6 +153,40 @@ export default function InterviewSessionPage({
       }
     } catch {
       setError("Failed to submit answer. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleSubmitVoiceAnswer = async () => {
+    if (!audioBlob || !currentQuestion || submitting) return;
+
+    setSubmitting(true);
+    setError("");
+    setHintText("");
+
+    try {
+      const result = await submitSpeechAnswer(interviewId, currentQuestion.id, audioBlob);
+      const speechMetrics = result.speech_metrics;
+      const answerText = speechMetrics?.transcript || "[Voice answer]";
+
+      setHistory((prev) => [
+        ...prev,
+        { question: currentQuestion, answer: answerText, evaluation: result, speechMetrics: speechMetrics || null },
+      ]);
+
+      resetRecording();
+
+      if (result.interview_completed) {
+        setCompleted(true);
+        setCurrentQuestion(null);
+        const updatedIv = await getInterview(interviewId);
+        setInterview(updatedIv);
+      } else if (result.next_question) {
+        setCurrentQuestion(result.next_question);
+      }
+    } catch {
+      setError("Failed to process voice answer. Try typing instead.");
     } finally {
       setSubmitting(false);
     }
@@ -324,6 +376,22 @@ export default function InterviewSessionPage({
               {entry.answer && (
                 <div className="flex justify-end">
                   <div className="bg-brand-600/20 border border-brand-500/10 rounded-2xl rounded-tr-md p-4 max-w-[85%]">
+                    {entry.speechMetrics && (
+                      <div className="flex items-center gap-2 mb-2 text-xs text-cyan-400/60">
+                        <AudioWaveform size={12} />
+                        <span>Voice</span>
+                        <span className="text-white/20">•</span>
+                        <span>{entry.speechMetrics.words_per_minute} WPM</span>
+                        <span className="text-white/20">•</span>
+                        <span>Confidence: {Math.round(entry.speechMetrics.confidence_score * 100)}%</span>
+                        {entry.speechMetrics.filler_word_count > 0 && (
+                          <>
+                            <span className="text-white/20">•</span>
+                            <span className="text-amber-400/60">{entry.speechMetrics.filler_word_count} fillers</span>
+                          </>
+                        )}
+                      </div>
+                    )}
                     <p className="text-sm leading-relaxed text-white/80">{entry.answer}</p>
                   </div>
                 </div>
@@ -459,6 +527,28 @@ export default function InterviewSessionPage({
       {currentQuestion && !completed && (
         <footer className="sticky bottom-0 glass border-t border-white/5">
           <div className="max-w-3xl mx-auto px-6 py-4">
+            {/* Mode toggle */}
+            <div className="flex items-center justify-end gap-2 mb-2">
+              <button
+                onClick={() => { setVoiceMode(false); resetRecording(); }}
+                className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs transition-colors ${
+                  !voiceMode ? "bg-brand-500/20 text-brand-300" : "text-white/30 hover:text-white/50"
+                }`}
+              >
+                <Keyboard size={12} />
+                Type
+              </button>
+              <button
+                onClick={() => setVoiceMode(true)}
+                className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs transition-colors ${
+                  voiceMode ? "bg-cyan-500/20 text-cyan-300" : "text-white/30 hover:text-white/50"
+                }`}
+              >
+                <Mic size={12} />
+                Voice
+              </button>
+            </div>
+
             <div className="flex gap-3">
               <button
                 onClick={handleGetHint}
@@ -468,30 +558,94 @@ export default function InterviewSessionPage({
                 <Lightbulb size={18} />
               </button>
 
-              <div className="flex-1 relative">
-                <textarea
-                  ref={answerRef}
-                  value={answer}
-                  onChange={(e) => setAnswer(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSubmitAnswer();
-                    }
-                  }}
-                  placeholder="Type your answer here... (Enter to submit, Shift+Enter for new line)"
-                  rows={3}
-                  className="w-full px-4 py-3 pr-12 rounded-xl bg-surface-800 border border-white/5 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-brand-500/50 transition-colors resize-none"
-                />
-                <button
-                  onClick={handleSubmitAnswer}
-                  disabled={!answer.trim() || submitting}
-                  className="absolute right-2 bottom-2 w-8 h-8 rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 flex items-center justify-center text-white disabled:opacity-30 hover:opacity-90 transition-opacity"
-                >
-                  {submitting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-                </button>
-              </div>
+              {!voiceMode ? (
+                /* Text input */
+                <div className="flex-1 relative">
+                  <textarea
+                    ref={answerRef}
+                    value={answer}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSubmitAnswer();
+                      }
+                    }}
+                    placeholder="Type your answer here... (Enter to submit, Shift+Enter for new line)"
+                    rows={3}
+                    className="w-full px-4 py-3 pr-12 rounded-xl bg-surface-800 border border-white/5 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-brand-500/50 transition-colors resize-none"
+                  />
+                  <button
+                    onClick={handleSubmitAnswer}
+                    disabled={!answer.trim() || submitting}
+                    className="absolute right-2 bottom-2 w-8 h-8 rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 flex items-center justify-center text-white disabled:opacity-30 hover:opacity-90 transition-opacity"
+                  >
+                    {submitting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                  </button>
+                </div>
+              ) : (
+                /* Voice input */
+                <div className="flex-1 flex items-center gap-3">
+                  {!isRecording && !audioBlob ? (
+                    <button
+                      onClick={startRecording}
+                      className="flex-1 py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-medium flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+                    >
+                      <Mic size={18} />
+                      Start Recording
+                    </button>
+                  ) : isRecording ? (
+                    <>
+                      <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20">
+                        <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
+                        <span className="text-sm text-red-300">Recording... {formatTime(recordingDuration)}</span>
+                        <div className="flex-1 flex justify-center gap-0.5">
+                          {[...Array(12)].map((_, i) => (
+                            <div
+                              key={i}
+                              className="w-1 bg-red-400/50 rounded-full animate-pulse"
+                              style={{
+                                height: `${8 + Math.random() * 16}px`,
+                                animationDelay: `${i * 0.08}s`,
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <button
+                        onClick={stopRecording}
+                        className="shrink-0 w-10 h-10 rounded-xl bg-red-500 flex items-center justify-center text-white hover:bg-red-600 transition-colors"
+                      >
+                        <MicOff size={18} />
+                      </button>
+                    </>
+                  ) : audioBlob ? (
+                    <>
+                      <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl glass-light">
+                        <AudioWaveform size={18} className="text-cyan-400" />
+                        <span className="text-sm text-white/60">Recording ready ({formatTime(recordingDuration)})</span>
+                      </div>
+                      <button
+                        onClick={resetRecording}
+                        className="shrink-0 px-3 py-2 rounded-xl glass-light text-white/40 text-xs hover:text-white/70 transition-colors"
+                      >
+                        Redo
+                      </button>
+                      <button
+                        onClick={handleSubmitVoiceAnswer}
+                        disabled={submitting}
+                        className="shrink-0 w-10 h-10 rounded-xl bg-gradient-to-r from-brand-500 to-brand-600 flex items-center justify-center text-white disabled:opacity-30 hover:opacity-90 transition-opacity"
+                      >
+                        {submitting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                      </button>
+                    </>
+                  ) : null}
+                </div>
+              )}
             </div>
+            {micError && (
+              <p className="text-xs text-red-400 mt-2">{micError}</p>
+            )}
           </div>
         </footer>
       )}

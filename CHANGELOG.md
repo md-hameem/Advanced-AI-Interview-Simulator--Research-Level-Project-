@@ -64,10 +64,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.0] — 2026-03-12
+
+### 🎙️ Added — Speech Intelligence (Module 2)
+
+#### Backend
+- **`speech_processor.py`** — Full speech analysis pipeline:
+  - OpenAI Whisper ASR transcription (lazy-loaded model)
+  - Filler word detection (um, uh, like, you know, etc.)
+  - Pause analysis from segment timing (>500ms gaps)
+  - WPM (words-per-minute) calculation
+  - Librosa audio features (pitch F0, RMS energy, onset variability)
+  - Composite confidence score (0–1) based on speech characteristics
+- **`routers/speech.py`** — 3 new API endpoints:
+  - `POST /api/speech/transcribe` — Whisper transcription
+  - `POST /api/speech/analyze` — Full speech metrics
+  - `POST /api/speech/answer/{id}/{qid}` — Submit voice answer (transcribe + analyze + evaluate)
+
+#### Frontend
+- **`useAudioRecorder` hook** — MediaRecorder API with start/stop/pause/resume and error handling
+- **Voice/Type mode toggle** in interview session — switch between keyboard and microphone input
+- **Recording UI** — Live recording animation with duration timer and waveform visualization
+- **Speech metrics display** — WPM, confidence %, filler count shown on voice-answered bubbles
+- **Speech API client functions** — `submitSpeechAnswer()` and `analyzeSpeech()` in `api.ts`
+
+---
+
 ## [Unreleased]
 
 ### Planned
-- Speech Intelligence (Whisper ASR + speech analytics)
 - Coding Interview Evaluator (Monaco editor + code sandbox)
 - STAR Behavioral Framework Detection
 - PDF report export
