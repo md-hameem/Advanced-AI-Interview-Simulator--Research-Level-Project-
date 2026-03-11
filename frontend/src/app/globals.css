@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+/* ─── Premium Design System ─────────────────────────────────────────── */
+
+@theme {
+  --color-brand-50: oklch(0.97 0.02 260);
+  --color-brand-100: oklch(0.93 0.04 260);
+  --color-brand-200: oklch(0.86 0.07 260);
+  --color-brand-300: oklch(0.76 0.12 260);
+  --color-brand-400: oklch(0.66 0.17 260);
+  --color-brand-500: oklch(0.55 0.22 260);
+  --color-brand-600: oklch(0.47 0.22 260);
+  --color-brand-700: oklch(0.40 0.18 260);
+
+  --color-surface-950: oklch(0.12 0.02 260);
+  --color-surface-900: oklch(0.16 0.02 260);
+  --color-surface-800: oklch(0.21 0.02 260);
+  --color-surface-700: oklch(0.28 0.02 260);
+  --color-surface-600: oklch(0.35 0.015 260);
+
+  --color-success: oklch(0.72 0.19 155);
+  --color-warning: oklch(0.80 0.16 80);
+  --color-danger: oklch(0.65 0.22 25);
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────── */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: var(--color-surface-950);
+  color: oklch(0.92 0.01 260);
+  min-height: 100vh;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface-900);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-600);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-500);
+}
+
+/* ─── Utilities ──────────────────────────────────────────────────────── */
+
+.glass {
+  background: oklch(0.18 0.02 260 / 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid oklch(1 0 0 / 0.06);
+}
+
+.glass-light {
+  background: oklch(0.22 0.02 260 / 0.5);
+  backdrop-filter: blur(12px);
+  border: 1px solid oklch(1 0 0 / 0.08);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-brand-300), var(--color-brand-500));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glow {
+  box-shadow:
+    0 0 20px oklch(0.55 0.22 260 / 0.15),
+    0 0 60px oklch(0.55 0.22 260 / 0.05);
+}
+
+.glow-text {
+  text-shadow: 0 0 30px oklch(0.55 0.22 260 / 0.4);
+}
+
+/* ─── Animations ─────────────────────────────────────────────────────── */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px oklch(0.55 0.22 260 / 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px oklch(0.55 0.22 260 / 0.4);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    oklch(0.25 0.02 260) 25%,
+    oklch(0.32 0.02 260) 50%,
+    oklch(0.25 0.02 260) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ─── Score Colors ───────────────────────────────────────────────────── */
+
+.score-excellent {
+  color: oklch(0.78 0.2 155);
+}
+
+.score-good {
+  color: oklch(0.8 0.16 130);
+}
+
+.score-average {
+  color: oklch(0.82 0.16 80);
+}
+
+.score-poor {
+  color: oklch(0.7 0.2 25);
+}
