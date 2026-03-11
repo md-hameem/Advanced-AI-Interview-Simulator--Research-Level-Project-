@@ -118,10 +118,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.4.0] — 2026-03-12
+
+### 🎯 Added — Behavioral Interview Analyzer (Module 6)
+
+#### Backend
+- **`behavioral_analyzer.py`** — Full STAR analysis pipeline:
+  - Rule-based STAR component detection (60+ keyword indicators across S/T/A/R)
+  - 12-question behavioral bank across 8 competencies (leadership, teamwork, conflict resolution, problem solving, communication, adaptability, ownership, initiative)
+  - LLM-based deep STAR analysis with per-component scores and summaries
+  - Competency, communication, specificity, and impact scoring
+  - Red flag detection (vague answers, hypothetical, blaming)
+- **`routers/behavioral.py`** — 6 new API endpoints:
+  - `GET /api/behavioral/competencies` — List competencies
+  - `GET /api/behavioral/questions` — List/filter behavioral questions
+  - `GET /api/behavioral/questions/{id}` — Get question with follow-ups
+  - `GET /api/behavioral/random` — Random question by competency/difficulty
+  - `POST /api/behavioral/detect-star` — Quick STAR detection (no LLM)
+  - `POST /api/behavioral/analyze/{id}` — Full STAR + competency analysis
+
+#### Frontend
+- **Behavioral Practice page** (`/behavioral`) — Premium UI:
+  - Competency-grouped question cards with color-coded icons
+  - STAR method tip banner
+  - Visual STAR component analysis (S/T/A/R scores, confidence badges, summaries)
+  - Additional assessment (competency, communication, specificity, impact)
+  - Strengths, improvements, red flags, and follow-up questions display
+
+---
+
 ## [Unreleased]
 
 ### Planned
-- STAR Behavioral Framework Detection
 - PDF report export
 - ML model training pipeline (BERT, CodeBERT, XGBoost)
 - Emotion detection (OpenCV + DeepFace)

@@ -296,3 +296,78 @@ export const evaluateCode = (questionId: string, code: string, language: string 
 
 export const analyzeComplexity = (code: string, language: string = "python") =>
   api.post<{ time: string; space: string; details: Record<string, unknown> }>("/coding/complexity", { code, language }).then((r) => r.data);
+
+// ─── Behavioral ──────────────────────────────────────────────────────
+
+export interface BehavioralQuestion {
+  id: string;
+  question: string;
+  competency: string;
+  difficulty: string;
+  follow_ups: string[];
+}
+
+export interface StarComponent {
+  detected: boolean;
+  confidence: string;
+  score: number;
+  matched_indicators: string[];
+  indicator_count: number;
+}
+
+export interface StarDetection {
+  components: Record<string, StarComponent>;
+  overall_star_score: number;
+  components_present: number;
+  components_total: number;
+  star_completeness: string;
+  is_complete_star: boolean;
+}
+
+export interface BehavioralAnalysis {
+  situation_score: number;
+  situation_summary: string;
+  task_score: number;
+  task_summary: string;
+  action_score: number;
+  action_summary: string;
+  result_score: number;
+  result_summary: string;
+  competency_score: number;
+  communication_score: number;
+  specificity_score: number;
+  impact_score: number;
+  overall_behavioral_score: number;
+  feedback: string;
+  strengths: string[];
+  improvements: string[];
+  missing_elements: string[];
+  red_flags: string[];
+}
+
+export interface BehavioralResult {
+  question_id: string;
+  question_text: string;
+  competency: string;
+  star_detection: StarDetection;
+  analysis: BehavioralAnalysis;
+  follow_up_questions: string[];
+}
+
+export const getBehavioralCompetencies = () =>
+  api.get<{ competencies: string[] }>("/behavioral/competencies").then((r) => r.data.competencies);
+
+export const getBehavioralQuestions = (competency?: string) =>
+  api.get<{ id: string; question: string; competency: string; difficulty: string }[]>(
+    "/behavioral/questions",
+    { params: competency ? { competency } : {} }
+  ).then((r) => r.data);
+
+export const getBehavioralQuestion = (id: string) =>
+  api.get<BehavioralQuestion>(`/behavioral/questions/${id}`).then((r) => r.data);
+
+export const detectStar = (answer: string) =>
+  api.post<StarDetection>("/behavioral/detect-star", { answer }).then((r) => r.data);
+
+export const analyzeBehavioral = (questionId: string, answer: string) =>
+  api.post<BehavioralResult>(`/behavioral/analyze/${questionId}`, { answer }).then((r) => r.data);
