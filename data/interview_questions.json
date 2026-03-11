@@ -1,0 +1,110 @@
+{
+  "categories": {
+    "data_structures": {
+      "easy": [
+        "What is an array? How does it differ from a linked list?",
+        "Explain what a stack is and give two real-world use cases.",
+        "What is a queue? What is the difference between a queue and a stack?",
+        "What is a hash table and why is it useful?",
+        "What is the difference between a singly linked list and a doubly linked list?"
+      ],
+      "medium": [
+        "Explain how a hash table handles collisions. Compare chaining vs open addressing.",
+        "What is a binary search tree? What are its time complexities for search, insert, and delete?",
+        "Explain the difference between a heap and a binary search tree.",
+        "What are the advantages of using a trie over a hash table for string operations?",
+        "Describe how a LRU cache works and what data structures you would use to implement one."
+      ],
+      "hard": [
+        "Design a data structure that supports insert, delete, and getRandom in O(1) average time.",
+        "Explain B-Trees and why they are used in database indexing instead of binary search trees.",
+        "Compare and contrast Red-Black trees and AVL trees. When would you use each?",
+        "How would you implement a thread-safe hash map? What are the trade-offs?",
+        "Explain skip lists. How do they compare to balanced BSTs in terms of performance?"
+      ]
+    },
+    "algorithms": {
+      "easy": [
+        "Explain binary search. What is its time complexity?",
+        "What is the difference between BFS and DFS?",
+        "Explain bubble sort. Why is it generally not used in practice?",
+        "What is recursion? Give an example of a problem best solved recursively.",
+        "What is the time complexity of linear search?"
+      ],
+      "medium": [
+        "Explain merge sort and analyze its time and space complexity.",
+        "What is dynamic programming? How does it differ from divide and conquer?",
+        "Explain Dijkstra's shortest path algorithm and its time complexity.",
+        "What is the two-pointer technique? Give an example problem where it's useful.",
+        "Explain the concept of amortized time complexity with an example."
+      ],
+      "hard": [
+        "Explain the A* search algorithm and when you would use it over Dijkstra's.",
+        "What is the difference between P, NP, NP-hard, and NP-complete problems?",
+        "Explain Kruskal's and Prim's algorithms for minimum spanning trees. Compare them.",
+        "How does the KMP string matching algorithm work? Why is it better than naive approach?",
+        "Explain topological sorting and give a real-world application."
+      ]
+    },
+    "system_design": {
+      "easy": [
+        "What is a load balancer and why is it important?",
+        "Explain the difference between SQL and NoSQL databases.",
+        "What is caching? Name some caching strategies.",
+        "What is a RESTful API? What are its main principles?",
+        "Explain the concept of horizontal vs vertical scaling."
+      ],
+      "medium": [
+        "Design a URL shortener like bit.ly. What components would you need?",
+        "How would you design a rate limiter for an API?",
+        "Explain the CAP theorem and its implications for distributed systems.",
+        "Design a simple chat application. What technologies would you use?",
+        "How would you design a notification system that can handle millions of users?"
+      ],
+      "hard": [
+        "Design a distributed search engine. How would you handle indexing and ranking?",
+        "How would you design Twitter's news feed? Consider scalability and real-time updates.",
+        "Design a distributed file storage system like Google Drive.",
+        "How would you design a real-time collaborative editing system like Google Docs?",
+        "Design a system that can process millions of events per second with guaranteed ordering."
+      ]
+    },
+    "machine_learning": {
+      "easy": [
+        "What is the difference between supervised and unsupervised learning?",
+        "Explain what overfitting is and how to prevent it.",
+        "What is the bias-variance tradeoff?",
+        "What is a confusion matrix?",
+        "Explain the difference between classification and regression."
+      ],
+      "medium": [
+        "Compare random forests with gradient boosting. When would you choose each?",
+        "Explain how backpropagation works in neural networks.",
+        "What is the vanishing gradient problem and how do modern architectures address it?",
+        "Explain the attention mechanism in transformers.",
+        "What is transfer learning and when is it useful?"
+      ],
+      "hard": [
+        "Explain the transformer architecture in detail. Why has it replaced RNNs for most NLP tasks?",
+        "How does BERT differ from GPT architecturally? What are the implications for different tasks?",
+        "Explain variational autoencoders and how they differ from regular autoencoders.",
+        "What are Graph Neural Networks and when would you use them?",
+        "Explain the RLHF technique used in training models like ChatGPT."
+      ]
+    },
+    "behavioral": {
+      "questions": [
+        "Tell me about a time you faced a significant technical challenge. How did you approach it?",
+        "Describe a situation where you had to work with a difficult team member.",
+        "Tell me about a project you're most proud of. What was your contribution?",
+        "Describe a time when you had to make a decision with incomplete information.",
+        "Tell me about a time you failed and what you learned from it.",
+        "How do you handle disagreements with your team about technical decisions?",
+        "Describe a time when you had to learn a new technology quickly for a project.",
+        "Tell me about a time you improved an existing process or system.",
+        "How do you prioritize tasks when you have multiple deadlines?",
+        "Describe a situation where you went above and beyond what was expected."
+      ]
+    }
+  }
+}
