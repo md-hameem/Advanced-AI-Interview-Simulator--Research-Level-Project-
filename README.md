@@ -64,28 +64,28 @@ The AI Interview Simulator goes beyond simple Q&A — it creates a **multi-dimen
 ## 🏗️ Architecture
 
 ```
-┌──────────────────────────────────────────────────────────────────┐
-│                        FRONTEND (Next.js 16)                     │
+┌──────────────────────────────────────────────────────────────────────┐
+│                        FRONTEND (Next.js 16)                         │
 │  Landing ─── New Interview ─── Live Session ─── Report ─── Dashboard │
-└─────────────────────────────┬────────────────────────────────────┘
+└─────────────────────────────┬────────────────────────────────────────┘
                               │ REST API (JSON)
 ┌─────────────────────────────▼────────────────────────────────────┐
-│                      BACKEND (FastAPI)                            │
-│                                                                   │
-│  ┌─────────────┐   ┌──────────────────┐   ┌──────────────────┐  │
-│  │   Router     │──▶│ Interview Agent  │──▶│   LLM Client     │  │
-│  │  (REST API)  │   │  (Adaptive Flow) │   │ (Google Gemini)  │  │
-│  └──────┬──────┘   └────────┬─────────┘   └──────────────────┘  │
-│         │                   │                                     │
+│                      BACKEND (FastAPI)                           │
+│                                                                  │
+│  ┌─────────────┐   ┌──────────────────┐   ┌──────────────────┐   │
+│  │   Router     │──▶│ Interview Agent  │──▶│   LLM Client   │   │
+│  │  (REST API)  │   │  (Adaptive Flow) │   │ (Google Gemini) │   │
+│  └──────┬──────┘   └────────┬─────────┘   └──────────────────┘   │
+│         │                   │                                    │
 │  ┌──────▼──────────────────▼──────────────────────────────────┐  │
-│  │                    SQLAlchemy ORM                            │  │
-│  │         Candidate │ Interview │ InterviewQuestion            │  │
+│  │                    SQLAlchemy ORM                          │  │
+│  │         Candidate │ Interview │ InterviewQuestion          │  │
 │  └─────────────────────────┬──────────────────────────────────┘  │
 └─────────────────────────────┬────────────────────────────────────┘
                               │
-                     ┌────────▼────────┐
+                     ┌────────▼───────────┐
                      │  SQLite / Postgres │
-                     └─────────────────┘
+                     └────────────────────┘
 ```
 
 ---
@@ -102,7 +102,7 @@ The AI Interview Simulator goes beyond simple Q&A — it creates a **multi-dimen
 
 ```bash
 git clone https://github.com/md-hameem/Advanced-AI-Interview-Simulator--Research-Level-Project-.git
-cd ai-interview-simulator
+cd Advanced-AI-Interview-Simulator--Research-Level-Project-
 
 # Backend
 cd backend

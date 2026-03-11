@@ -209,3 +209,90 @@ export const analyzeSpeech = async (audioBlob: Blob): Promise<SpeechMetrics> => 
 };
 
 export default api;
+
+// ─── Coding ───────────────────────────────────────────────────────────
+
+export interface CodingQuestion {
+  id: string;
+  title: string;
+  difficulty: string;
+  description: string;
+  starter_code: string;
+  topics: string[];
+  optimal_complexity: { time: string; space: string };
+  num_test_cases: number;
+}
+
+export interface TestResult {
+  test_index: number;
+  passed: boolean;
+  input: Record<string, unknown>;
+  expected: unknown;
+  actual: unknown;
+  error?: string;
+  execution_time_ms: number;
+}
+
+export interface TestResults {
+  total_tests: number;
+  passed: number;
+  failed: number;
+  pass_rate: number;
+  results: TestResult[];
+}
+
+export interface CodeReview {
+  code_quality_score: number;
+  correctness_score: number;
+  efficiency_score: number;
+  style_score: number;
+  overall_code_score: number;
+  feedback: string;
+  strengths: string[];
+  weaknesses: string[];
+  suggestions: string[];
+  edge_cases_missed: string[];
+  optimal_approach: string;
+}
+
+export interface CodeEvaluationResult {
+  question_id: string;
+  question_title: string;
+  language: string;
+  test_results: TestResults;
+  complexity: { time: string; space: string; details: Record<string, unknown> };
+  review: CodeReview;
+  optimal_complexity: { time: string; space: string };
+}
+
+export interface ExecutionResult {
+  success: boolean;
+  stdout: string;
+  stderr: string;
+  error?: string;
+  execution_time_ms: number;
+}
+
+export const getCodingQuestions = (difficulty?: string) =>
+  api.get<{ id: string; title: string; difficulty: string; topics: string[] }[]>(
+    "/coding/questions",
+    { params: difficulty ? { difficulty } : {} }
+  ).then((r) => r.data);
+
+export const getCodingQuestion = (id: string, language: string = "python") =>
+  api.get<CodingQuestion>(`/coding/questions/${id}`, { params: { language } }).then((r) => r.data);
+
+export const getRandomCodingQuestion = (difficulty: string = "easy", language: string = "python") =>
+  api.get<CodingQuestion>("/coding/random", { params: { difficulty, language } }).then((r) => r.data);
+
+export const executeCode = (code: string, language: string = "python", stdin: string = "") =>
+  api.post<ExecutionResult>("/coding/execute", { code, language, stdin }).then((r) => r.data);
+
+export const runCodeTests = (questionId: string, code: string, language: string = "python") =>
+  api.post<TestResults>(`/coding/test/${questionId}`, { code, language }).then((r) => r.data);
+
+export const evaluateCode = (questionId: string, code: string, language: string = "python") =>
+  api.post<CodeEvaluationResult>(`/coding/evaluate/${questionId}`, { code, language }).then((r) => r.data);
+
+export const analyzeComplexity = (code: string, language: string = "python") =>
+  api.post<{ time: string; space: string; details: Record<string, unknown> }>("/coding/complexity", { code, language }).then((r) => r.data);

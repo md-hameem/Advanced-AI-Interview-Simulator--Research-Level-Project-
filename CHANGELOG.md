@@ -90,10 +90,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.0] — 2026-03-12
+
+### 💻 Added — Coding Interview Evaluator (Module 5)
+
+#### Backend
+- **`code_evaluator.py`** — Full code evaluation pipeline:
+  - Sandboxed code execution via subprocess (Python, JavaScript, TypeScript)
+  - Test runner with flexible output comparison (literal, structural, case-insensitive)
+  - AST-based complexity analysis (loop depth, recursion detection, sorting, auxiliary DS)
+  - LLM code review via Gemini (quality, correctness, efficiency, style scores)
+  - 5 coding problems: Two Sum, Reverse Linked List, Valid Parentheses, Max Subarray, LRU Cache
+- **`routers/coding.py`** — 7 new API endpoints:
+  - `GET /api/coding/questions` — List/filter coding problems
+  - `GET /api/coding/questions/{id}` — Get problem with starter code
+  - `GET /api/coding/random` — Random problem by difficulty
+  - `POST /api/coding/execute` — Run code (sandboxed)
+  - `POST /api/coding/test/{id}` — Run test cases
+  - `POST /api/coding/evaluate/{id}` — Full evaluation (tests + complexity + LLM review)
+  - `POST /api/coding/complexity` — Static complexity analysis
+
+#### Frontend
+- **Coding Practice page** (`/coding`) — 3-pane IDE layout:
+  - Left: problem list, description with formatted markdown, test count, optimal complexity
+  - Center: Monaco Editor with Python/JavaScript toggle, syntax highlighting
+  - Bottom: Results panel with Run output, expandable test results, complexity comparison, LLM review scores
+
+---
+
 ## [Unreleased]
 
 ### Planned
-- Coding Interview Evaluator (Monaco editor + code sandbox)
 - STAR Behavioral Framework Detection
 - PDF report export
 - ML model training pipeline (BERT, CodeBERT, XGBoost)
