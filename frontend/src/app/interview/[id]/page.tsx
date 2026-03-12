@@ -19,6 +19,8 @@ import {
   MicOff,
   AudioWaveform,
   Keyboard,
+  Camera,
+  CameraOff,
 } from "lucide-react";
 import {
   startInterview,
@@ -32,6 +34,7 @@ import {
   type SpeechMetrics,
 } from "@/lib/api";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
+import { useWebcam } from "@/hooks/useWebcam";
 
 interface QAEntry {
   question: Question;
@@ -74,6 +77,15 @@ export default function InterviewSessionPage({
     resetRecording,
     error: micError,
   } = useAudioRecorder();
+
+  // Webcam tracking
+  const {
+    videoRef,
+    isWebcamActive,
+    startWebcam,
+    stopWebcam,
+    error: camError,
+  } = useWebcam(interviewId);
 
   // Timer
   useEffect(() => {
@@ -327,6 +339,19 @@ export default function InterviewSessionPage({
             </span>
           </div>
           <div className="flex items-center gap-4 text-sm">
+            {/* Camera toggle */}
+            <button
+              onClick={isWebcamActive ? stopWebcam : startWebcam}
+              className={`p-1.5 rounded-lg transition-colors border ${
+                isWebcamActive 
+                  ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
+                  : "bg-surface-800 text-white/40 hover:text-white/70 border-white/5"
+              }`}
+              title={isWebcamActive ? "Disable Emotion Tracking" : "Enable Emotion Tracking (Webcam)"}
+            >
+              {isWebcamActive ? <Camera size={16} /> : <CameraOff size={16} />}
+            </button>
+            
             <div className="flex items-center gap-1.5 text-white/40">
               <Clock size={14} />
               {formatTime(elapsed)}
@@ -646,9 +671,35 @@ export default function InterviewSessionPage({
             {micError && (
               <p className="text-xs text-red-400 mt-2">{micError}</p>
             )}
+            {camError && (
+              <p className="text-xs text-red-400 mt-2">{camError}</p>
+            )}
           </div>
         </footer>
       )}
+
+      {/* ── PIP Camera View ───────────────────────────────────────── */}
+      <div 
+        className={`fixed bottom-24 right-6 w-48 rounded-xl overflow-hidden glass shadow-2xl transition-all duration-300 z-40 ${
+          isWebcamActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+        }`}
+      >
+        <div className="bg-surface-800 text-xs px-3 py-2 flex justify-between items-center border-b border-white/5">
+          <span className="text-white/60 font-medium tracking-wide">Emotion Tracker</span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] text-emerald-400 uppercase tracking-wider">Live</span>
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          </div>
+        </div>
+        <div className="bg-black/50 aspect-video relative">
+          <video 
+            ref={videoRef} 
+            muted 
+            playsInline 
+            className="w-full h-full object-cover transform -scale-x-100"
+          />
+        </div>
+      </div>
     </div>
   );
 }

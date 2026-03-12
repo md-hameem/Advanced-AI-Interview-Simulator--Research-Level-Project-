@@ -35,6 +35,7 @@ class InterviewCreate(BaseModel):
     candidate_id: str
     interview_type: str = Field(default="mixed", pattern="^(technical|behavioral|coding|system_design|mixed)$")
     difficulty: str = Field(default="medium", pattern="^(easy|medium|hard|expert)$")
+    persona: str = Field(default="default", pattern="^(default|google|amazon|startup)$")
     total_questions: int = Field(default=10, ge=1, le=30)
 
 
@@ -44,6 +45,7 @@ class InterviewResponse(BaseModel):
     interview_type: str
     status: str
     difficulty: str
+    persona: str
     current_question_index: int
     total_questions: int
     started_at: Optional[datetime]

@@ -69,7 +69,16 @@ IMPORTANT: Return ONLY valid JSON. No markdown code blocks, no extra text. Just 
 
 # ─── Prompt Templates ────────────────────────────────────────────────────
 
-GENERATE_QUESTION_PROMPT = """You are an expert technical interviewer. Generate an interview question based on the following parameters:
+PERSONA_GUIDANCE = {
+    "default": "Conduct a standard, balanced technical interview. Focus on assessing technical competence and clear communication.",
+    "google": "Act as a Google interviewer. Be highly analytical and academically rigorous. Focus heavily on algorithmic optimality (Time/Space complexity), edge cases, scalability limits, and deep theoretical understanding of data structures and systems.",
+    "amazon": "Act as an Amazon interviewer. Focus relentlessly on the Leadership Principles (Customer Obsession, Ownership, Deliver Results, Dive Deep). Demand specific, quantifiable examples of past behavior using the STAR method. Probe for data-driven decisions and customer impact.",
+    "startup": "Act as a fast-paced Startup founder. Focus on practical engineering impact, speed of delivery, dealing with ambiguity, wearing multiple hats, and getting things done efficiently rather than academic perfection. Favor scrappy, scalable solutions."
+}
+
+GENERATE_QUESTION_PROMPT = """{persona_guidance}
+
+Generate an interview question based on the following parameters:
 
 Interview Type: {interview_type}
 Difficulty: {difficulty}
@@ -100,7 +109,9 @@ Return JSON in this exact format:
 }}"""
 
 
-EVALUATE_ANSWER_PROMPT = """You are an expert technical interview evaluator. Evaluate the candidate's answer using a structured rubric.
+EVALUATE_ANSWER_PROMPT = """{persona_guidance}
+
+Evaluate the candidate's answer using a structured rubric.
 
 Question: {question_text}
 Question Type: {question_type}
@@ -136,7 +147,9 @@ Return JSON in this exact format:
 }}"""
 
 
-GENERATE_FOLLOW_UP_PROMPT = """You are an expert technical interviewer. Based on the candidate's answer, generate an appropriate follow-up question.
+GENERATE_FOLLOW_UP_PROMPT = """{persona_guidance}
+
+Based on the candidate's answer, generate an appropriate follow-up question.
 
 Original Question: {original_question}
 Candidate's Answer: {answer_text}
@@ -175,6 +188,9 @@ Overall Scores:
 - Communication: {communication_score}/5
 - Problem Solving: {problem_solving_score}/5
 - Overall: {overall_score}/10
+
+Emotion Tracking Data (if available):
+{emotion_data}
 
 Generate a professional assessment report with:
 1. Executive summary (2-3 sentences)

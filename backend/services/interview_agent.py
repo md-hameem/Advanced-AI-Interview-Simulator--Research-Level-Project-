@@ -14,11 +14,13 @@ from models.interview import (
 )
 from services.llm_client import (
     llm_client,
+    PERSONA_GUIDANCE,
     GENERATE_QUESTION_PROMPT,
-    EVALUATE_ANSWER_PROMPT,
     GENERATE_FOLLOW_UP_PROMPT,
     GENERATE_REPORT_PROMPT,
+    GENERATE_LEARNING_PLAN_PROMPT,
 )
+from services.multi_agent import multi_agent_evaluator
 
 logger = logging.getLogger(__name__)
 
@@ -100,7 +102,7 @@ class InterviewAgent:
         db.commit()
 
         # Evaluate the answer
-        evaluation = await self._evaluate_answer(question)
+        evaluation = await self._evaluate_answer(interview, question)
 
         # Update question with scores
         question.correctness_score = evaluation["correctness_score"]
@@ -193,6 +195,7 @@ class InterviewAgent:
             f"Last {len(perf_history)} scores: {[round(p, 1) for p in perf_history[-5:]]}"
 
         prompt = GENERATE_QUESTION_PROMPT.format(
+            persona_guidance=PERSONA_GUIDANCE.get(getattr(interview, "persona", "default"), PERSONA_GUIDANCE["default"]),
             interview_type=interview_type,
             difficulty=current_difficulty,
             topic=topic,
@@ -248,6 +251,7 @@ class InterviewAgent:
     ) -> InterviewQuestion:
         """Generate a follow-up question probing the candidate's weaknesses."""
         prompt = GENERATE_FOLLOW_UP_PROMPT.format(
+            persona_guidance=PERSONA_GUIDANCE.get(getattr(interview, "persona", "default"), PERSONA_GUIDANCE["default"]),
             original_question=parent_question.question_text,
             answer_text=parent_question.answer_text,
             overall_score=evaluation["overall_question_score"],
@@ -295,35 +299,25 @@ class InterviewAgent:
 
     # ─── Answer Evaluation ────────────────────────────────────────────
 
-    async def _evaluate_answer(self, question: InterviewQuestion) -> dict:
-        """Evaluate a candidate's answer using the rubric-based LLM evaluation."""
-        prompt = EVALUATE_ANSWER_PROMPT.format(
-            question_text=question.question_text,
-            question_type=question.question_type,
-            topic=question.topic or "general",
-            difficulty=question.difficulty,
-            expected_concepts=", ".join(question.expected_concepts or []),
-            answer_text=question.answer_text,
-        )
-
+    async def _evaluate_answer(self, interview: Interview, question: InterviewQuestion) -> dict:
+        """Evaluate a candidate's answer using the Multi-Agent Evaluation pipeline."""
+        
         try:
-            evaluation = await llm_client.generate_json(prompt)
-            # Clamp scores
-            for key in ["correctness_score", "depth_score", "clarity_score", "reasoning_score"]:
-                evaluation[key] = max(0, min(5, float(evaluation.get(key, 0))))
-            evaluation["overall_question_score"] = max(0, min(10, float(evaluation.get("overall_question_score", 0))))
+            evaluation = await multi_agent_evaluator.evaluate_answer(interview, question)
+            
+            # Ensure required keys exist
             evaluation.setdefault("feedback", "No feedback available.")
             evaluation.setdefault("strengths", [])
             evaluation.setdefault("weaknesses", [])
         except Exception as e:
-            logger.error(f"Evaluation failed: {e}")
+            logger.error(f"Multi-Agent Evaluation failed in interview_agent: {e}")
             evaluation = {
                 "correctness_score": 2.5,
                 "depth_score": 2.5,
                 "clarity_score": 2.5,
                 "reasoning_score": 2.5,
                 "overall_question_score": 5.0,
-                "feedback": "Evaluation temporarily unavailable. Score is a placeholder.",
+                "feedback": "Evaluation temporarily unavailable.",
                 "strengths": [],
                 "weaknesses": [],
             }
@@ -445,6 +439,15 @@ class InterviewAgent:
             for q in questions
         ])
 
+        context = interview.context or {}
+        emotion_history = context.get("emotion_history", [])
+        if emotion_history:
+            avg_stress = sum(e.get("stress_level", 0) for e in emotion_history) / len(emotion_history)
+            avg_conf = sum(e.get("confidence_level", 0) for e in emotion_history) / len(emotion_history)
+            emotion_data = f"Average Stress Level: {avg_stress:.1f}%. Average Confidence Level: {avg_conf:.1f}%."
+        else:
+            emotion_data = "No webcam emotion data collected."
+
         prompt = GENERATE_REPORT_PROMPT.format(
             candidate_name=candidate.name,
             target_role=candidate.target_role or "Software Engineer",
@@ -454,6 +457,7 @@ class InterviewAgent:
             communication_score=interview.communication_score or 0,
             problem_solving_score=interview.problem_solving_score or 0,
             overall_score=interview.overall_score or 0,
+            emotion_data=emotion_data,
         )
 
         try:

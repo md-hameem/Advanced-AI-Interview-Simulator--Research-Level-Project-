@@ -54,6 +54,16 @@ def get_candidate(candidate_id: str, db: Session = Depends(get_db)):
     return candidate
 
 
+@router.get("/candidates/{candidate_id}/learning-plan")
+async def get_learning_plan(candidate_id: str, db: Session = Depends(get_db)):
+    """Generate a personalized learning plan based on past interview weaknesses."""
+    try:
+        plan = await interview_agent.generate_learning_plan(db, candidate_id)
+        return plan
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # ─── Interview Endpoints ─────────────────────────────────────────────────
 
 @router.post("/interviews", response_model=InterviewResponse)
@@ -67,6 +77,7 @@ def create_interview(data: InterviewCreate, db: Session = Depends(get_db)):
         candidate_id=data.candidate_id,
         interview_type=data.interview_type,
         difficulty=data.difficulty,
+        persona=data.persona,
         total_questions=data.total_questions,
     )
     db.add(interview)

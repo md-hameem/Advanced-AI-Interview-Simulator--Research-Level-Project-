@@ -25,6 +25,7 @@ export interface Interview {
   interview_type: string;
   status: string;
   difficulty: string;
+  persona: string;
   current_question_index: number;
   total_questions: number;
   started_at: string | null;
@@ -123,6 +124,7 @@ export const createInterview = (data: {
   candidate_id: string;
   interview_type?: string;
   difficulty?: string;
+  persona?: string;
   total_questions?: number;
 }) => api.post<Interview>("/interviews", data).then((r) => r.data);
 

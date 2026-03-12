@@ -63,6 +63,13 @@ const difficulties = [
   { id: "expert", label: "Expert", desc: "Staff / Principal", color: "text-rose-400" },
 ];
 
+const personas = [
+  { id: "default", label: "Default", desc: "Balanced standard technical interview" },
+  { id: "google", label: "Google", desc: "Rigorous focus on algorithmic optimality" },
+  { id: "amazon", label: "Amazon", desc: "Focus on Leadership Principles & STAR" },
+  { id: "startup", label: "Startup", desc: "Focus on impact, speed, and real-world delivery" },
+];
+
 export default function NewInterviewPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
@@ -77,6 +84,7 @@ export default function NewInterviewPage() {
   const [skills, setSkills] = useState("");
   const [interviewType, setInterviewType] = useState("mixed");
   const [difficulty, setDifficulty] = useState("medium");
+  const [persona, setPersona] = useState("default");
   const [numQuestions, setNumQuestions] = useState(5);
 
   const handleStart = async () => {
@@ -105,6 +113,7 @@ export default function NewInterviewPage() {
         candidate_id: candidate.id,
         interview_type: interviewType,
         difficulty,
+        persona,
         total_questions: numQuestions,
       });
 
@@ -282,6 +291,30 @@ export default function NewInterviewPage() {
                   >
                     <div className={`font-semibold text-sm ${d.color}`}>{d.label}</div>
                     <div className="text-xs text-white/30 mt-0.5">{d.desc}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Persona */}
+            <div className="glass rounded-2xl p-6 space-y-4">
+              <h2 className="font-semibold flex items-center gap-2">
+                <User size={18} className="text-brand-400" />
+                Interviewer Persona
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {personas.map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => setPersona(p.id)}
+                    className={`p-4 rounded-xl text-left transition-all duration-200 ${
+                      persona === p.id
+                        ? "glass-light ring-2 ring-brand-500/50 scale-[1.02]"
+                        : "bg-surface-800/50 border border-white/5 hover:border-white/10"
+                    }`}
+                  >
+                    <div className="font-semibold text-sm text-white mb-1">{p.label}</div>
+                    <div className="text-xs text-white/40">{p.desc}</div>
                   </button>
                 ))}
               </div>

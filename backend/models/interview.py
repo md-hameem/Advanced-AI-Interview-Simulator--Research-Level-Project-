@@ -36,6 +36,13 @@ class Difficulty(str, enum.Enum):
     EXPERT = "expert"
 
 
+class Persona(str, enum.Enum):
+    DEFAULT = "default"
+    GOOGLE = "google"
+    AMAZON = "amazon"
+    STARTUP = "startup"
+
+
 # ─── Models ──────────────────────────────────────────────────────────────
 
 class Candidate(Base):
@@ -61,6 +68,7 @@ class Interview(Base):
     interview_type = Column(String(50), default="mixed")  # technical, behavioral, coding, mixed
     status = Column(String(20), default=InterviewStatus.PENDING.value)
     difficulty = Column(String(20), default=Difficulty.MEDIUM.value)
+    persona = Column(String(20), default=Persona.DEFAULT.value)
     current_question_index = Column(Integer, default=0)
     total_questions = Column(Integer, default=10)
     started_at = Column(DateTime, nullable=True)
