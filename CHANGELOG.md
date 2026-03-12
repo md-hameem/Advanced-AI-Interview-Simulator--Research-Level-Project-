@@ -217,9 +217,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.7.0] — 2026-03-13
+
+### 🤖 Added — Advanced Interview Features (Phase 9)
+
+#### Backend
+- **AI Interviewer Personalities**: Custom LLM instructions for `Default`, `Google`, `Amazon`, and `Startup` personas, automatically adjusting rigorousness, follow-ups, and interaction style.
+- **Multi-Agent Evaluation Panel**: Refactored evaluation logic in `multi_agent.py` introducing a panel of parallel evaluators: `Tech Lead` (technical depth/accuracy) and `HR Agent` (communication/clarity), with a `Coordinator` agent to aggregate unified feedback.
+- **Emotion Tracking**: New `emotion_detector.py` service using OpenCV and DeepFace (optional) to measure candidate stress and confidence levels from webcam frames mapped to a `/api/vision/analyze-frame/` endpoint.
+- **Personalized Learning Feedback**: Added `/api/candidates/{id}/learning-plan` to aggregate recurring weaknesses from past interviews and generate a customized 4-week study plan via the LLM.
+
+#### Frontend
+- **Interviewer Persona Selector**: New dynamic grid selector added to the interview configuration screen (`/interview/new`) allowing candidates to select their interviewer style before starting.
+- **Webcam Emotion Tracking**: Integrated `useWebcam` React hook providing a Picture-in-Picture (PIP) UI in the interview session to silently capture video frames and stream semantic emotion telemetry to the backend evaluator.
+
+---
+
 ## [Unreleased]
 
 ### Planned
-- Emotion detection (OpenCV + DeepFace)
-- AI interviewer personalities
-- Multi-agent interview system
+- Dockerized deployment
+- WebRTC real-time bidirectional audio streaming for speech interactions

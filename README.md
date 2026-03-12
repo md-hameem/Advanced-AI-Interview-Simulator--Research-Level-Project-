@@ -403,10 +403,10 @@ ml/
 | ✅ | **Behavioral Analyzer** | STAR detection with 60+ indicators, 8 competencies |
 | ✅ | **PDF Report Export** | Professional branded reports with ReportLab |
 | ✅ | **ML Pipeline** | DeBERTa, DistilBERT, CodeBERT, XGBoost + notebooks |
-| 🔲 | **Emotion Detection** | Facial + voice tone analysis (OpenCV, DeepFace) |
-| 🔲 | **Interviewer Personalities** | Google / Amazon / Startup styles |
-| 🔲 | **Multi-Agent System** | Interviewer, Evaluator, Code Reviewer agents |
-| 🔲 | **Personalized Learning** | Adaptive study plan based on weakness patterns |
+| ✅ | **Emotion Detection** | Facial + voice tone analysis (OpenCV, DeepFace) |
+| ✅ | **Interviewer Personalities** | Google / Amazon / Startup styles |
+| ✅ | **Multi-Agent System** | Tech Lead, HR, and Coordinator evaluator agents |
+| ✅ | **Personalized Learning** | Adaptive study plan based on weakness patterns |
 
 ---
 
