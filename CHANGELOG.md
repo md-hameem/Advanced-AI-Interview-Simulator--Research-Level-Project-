@@ -147,10 +147,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.5.0] — 2026-03-13
+
+### 📄 Added — PDF Report Export (Module 7)
+
+#### Backend
+- **`pdf_generator.py`** — Professional PDF report using ReportLab:
+  - Branded header with candidate info and date
+  - Large overall score display with color coding
+  - Category score breakdown (Technical, Communication, Problem Solving) with visual bars
+  - Recommendation badge (Strong Hire / Hire / Lean No / No Hire)
+  - Two-column strengths & weaknesses layout
+  - Question-by-question scores table with per-dimension breakdown
+  - Detailed feedback and study recommendations section
+  - Branded footer with generation timestamp
+- **`GET /api/interviews/{id}/report/pdf`** — Streams PDF as downloadable file
+
+#### Frontend
+- **Download PDF button** on report page (`/interview/[id]/report`)
+  - Cyan gradient button with loading spinner
+  - Fetches PDF as blob and triggers browser download
+  - Error handling with user feedback
+
+---
+
 ## [Unreleased]
 
 ### Planned
-- PDF report export
 - ML model training pipeline (BERT, CodeBERT, XGBoost)
 - Emotion detection (OpenCV + DeepFace)
 - AI interviewer personalities

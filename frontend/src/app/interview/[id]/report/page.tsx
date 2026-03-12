@@ -11,8 +11,11 @@ import {
   BookOpen,
   Download,
   TrendingUp,
+  Loader2,
 } from "lucide-react";
 import { getReport, type Report } from "@/lib/api";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
 export default function ReportPage({
   params,
@@ -23,6 +26,7 @@ export default function ReportPage({
   const [report, setReport] = useState<Report | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -51,6 +55,27 @@ export default function ReportPage({
     if (rec.includes("hire") && !rec.includes("no")) return { text: "HIRE", cls: "bg-green-500/15 text-green-400 ring-green-500/20" };
     if (rec.includes("lean_no")) return { text: "LEAN NO HIRE", cls: "bg-amber-500/15 text-amber-400 ring-amber-500/20" };
     return { text: "NO HIRE", cls: "bg-red-500/15 text-red-400 ring-red-500/20" };
+  };
+
+  const handleDownloadPDF = async () => {
+    setDownloading(true);
+    try {
+      const res = await fetch(`${API_BASE}/interviews/${interviewId}/report/pdf`);
+      if (!res.ok) throw new Error("PDF generation failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `interview_report_${interviewId.slice(0, 8)}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      alert("Failed to download PDF. Is the backend running?");
+    } finally {
+      setDownloading(false);
+    }
   };
 
   if (loading) {
@@ -246,17 +271,25 @@ export default function ReportPage({
 
         {/* Actions */}
         <div className="flex gap-3 animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
+          <button
+            onClick={handleDownloadPDF}
+            disabled={downloading}
+            className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-60"
+          >
+            {downloading ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
+            {downloading ? "Generating..." : "Download PDF"}
+          </button>
           <Link
             href="/interview/new"
             className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold text-center hover:opacity-90 transition-opacity"
           >
-            Start New Interview
+            New Interview
           </Link>
           <Link
             href="/dashboard"
             className="flex-1 py-3.5 rounded-xl glass-light text-white/70 font-medium text-center hover:text-white transition-colors"
           >
-            View Dashboard
+            Dashboard
           </Link>
         </div>
       </div>

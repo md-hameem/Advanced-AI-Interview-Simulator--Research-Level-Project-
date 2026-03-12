@@ -2,7 +2,9 @@
 Advanced AI Interview Simulator - Interview API Router
 Endpoints for managing interviews, submitting answers, and getting reports.
 """
+import io
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
 from database import get_db
@@ -14,6 +16,7 @@ from schemas import (
     InterviewReportResponse,
 )
 from services.interview_agent import interview_agent
+from services.pdf_generator import pdf_generator
 
 router = APIRouter(prefix="/api", tags=["interview"])
 
@@ -193,6 +196,31 @@ async def get_interview_report(interview_id: str, db: Session = Depends(get_db))
         return report
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/interviews/{interview_id}/report/pdf")
+async def download_report_pdf(interview_id: str, db: Session = Depends(get_db)):
+    """Download the candidate assessment report as a PDF."""
+    interview = db.query(Interview).filter(Interview.id == interview_id).first()
+    if not interview:
+        raise HTTPException(status_code=404, detail="Interview not found")
+    if interview.status != InterviewStatus.COMPLETED.value:
+        raise HTTPException(status_code=400, detail="Interview not yet completed")
+
+    try:
+        report = await interview_agent.generate_report(db, interview_id)
+        pdf_bytes = pdf_generator.generate(report)
+
+        candidate_name = report.get("candidate_name", "candidate").replace(" ", "_").lower()
+        filename = f"interview_report_{candidate_name}_{interview_id[:8]}.pdf"
+
+        return StreamingResponse(
+            io.BytesIO(pdf_bytes),
+            media_type="application/pdf",
+            headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"PDF generation failed: {str(e)}")
 
 
 # ─── Dashboard / Analytics ───────────────────────────────────────────────
