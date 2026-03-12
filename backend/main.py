@@ -14,6 +14,7 @@ from routers.interview import router as interview_router
 from routers.speech import router as speech_router
 from routers.coding import router as coding_router
 from routers.behavioral import router as behavioral_router
+from routers.ml import router as ml_router
 
 # Configure logging
 logging.basicConfig(
@@ -57,6 +58,7 @@ app.include_router(interview_router)
 app.include_router(speech_router)
 app.include_router(coding_router)
 app.include_router(behavioral_router)
+app.include_router(ml_router)
 
 
 @app.get("/")

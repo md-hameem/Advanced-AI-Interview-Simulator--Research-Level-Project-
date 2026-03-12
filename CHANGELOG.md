@@ -171,10 +171,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.6.0] — 2026-03-13
+
+### 🧠 Added — ML Model Training Pipeline (Module 8)
+
+#### Training Infrastructure (`ml/`)
+- **`config.py`** — Centralized hyperparameters for all 5 models (learning rates, architectures, batch sizes)
+- **`dataset.py`** — Synthetic dataset generator (CLI: `python -m ml.dataset`):
+  - Answer quality (Q+A → score), Communication (text → clarity/fluency/structure)
+  - STAR behavioral (text → S/T/A/R scores), Code evaluator (code → quality/efficiency/style)
+  - Meta-scorer (16-feature vector → final score)
+- **`train.py`** — Unified training CLI (`python -m ml.train --all --epochs 5`):
+  - Train individual or all models, auto-generate datasets, save training reports
+
+#### 5 Specialized Models (`ml/models/`)
+- **`answer_quality.py`** — DeBERTa-v3-small → regression (0-10 answer score)
+- **`communication.py`** — DistilBERT → multi-head (clarity/fluency/structure)
+- **`star_analyzer.py`** — DeBERTa-v3-small → 4-head STAR detection (S/T/A/R)
+- **`code_evaluator.py`** — CodeBERT → multi-head (quality/efficiency/style)
+- **`meta_scorer.py`** — XGBoost aggregator (16 features → final score), feature importance
+
+#### Inference & API
+- **`inference.py`** — Production inference service with lazy model loading
+- **`routers/ml.py`** — 5 new API endpoints:
+  - `GET /api/ml/status` — Model availability
+  - `POST /api/ml/predict/answer-quality` — DeBERTa answer scoring
+  - `POST /api/ml/predict/communication` — Communication dimensions
+  - `POST /api/ml/predict/star` — STAR component detection
+  - `POST /api/ml/predict/code-quality` — Code quality assessment
+
+---
+
 ## [Unreleased]
 
 ### Planned
-- ML model training pipeline (BERT, CodeBERT, XGBoost)
 - Emotion detection (OpenCV + DeepFace)
 - AI interviewer personalities
 - Multi-agent interview system
