@@ -200,6 +200,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `POST /api/ml/predict/star` — STAR component detection
   - `POST /api/ml/predict/code-quality` — Code quality assessment
 
+#### Jupyter Notebooks
+- **`01_dataset_exploration.ipynb`** — Data generation + visualization:
+  - Score distributions, correlation heatmaps, STAR radar chart, code quality scatter
+  - Meta-scorer feature analysis, cross-dataset summary table
+- **`02_model_training.ipynb`** — Full training + evaluation:
+  - Per-model training with pred-vs-true scatter plots, residual distributions
+  - XGBoost feature importance, training summary comparison, inference demo
+
+#### Documentation
+- **`ml/README.md`** — Comprehensive ML docs:
+  - Per-dataset schema tables (fields, types, ranges, distributions)
+  - Dataset download links (SQuAD, CoQA, HumanEval, CodeXGLUE, ASAP-AES)
+  - Pre-trained model weights (Hugging Face links)
+  - Quick start (notebooks, CLI, Python API), config reference
+
 ---
 
 ## [Unreleased]
