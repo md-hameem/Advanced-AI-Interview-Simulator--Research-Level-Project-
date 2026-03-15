@@ -37,7 +37,7 @@ function ParticleSwarm({ scrollYProgress }: { scrollYProgress: any }) {
       // Scroll-driven explosion & rotation
       const progress = scrollYProgress.get();
       // Scale from 1 up to 2.5 as we scroll
-      const scale = 1 + progress * 1.5;
+      const scale = Math.max(0.001, 1 + progress * 1.5);
       ref.current.scale.set(scale, scale, scale);
       
       // Add extra rotation based on scroll position
@@ -75,7 +75,7 @@ function CoreOrb({ scrollYProgress }: { scrollYProgress: any }) {
       orbRef.current.rotation.y = clock.getElapsedTime() * 0.2 + progress * Math.PI * 2;
       
       // Scale down the core as we scroll to section 2, disappear by section 3
-      const scale = Math.max(0, 1 - progress * 1.5);
+      const scale = Math.max(0.001, 1 - progress * 1.5);
       orbRef.current.scale.set(scale, scale, scale);
     }
     
@@ -109,7 +109,7 @@ export default function Scroll3DScene() {
 
   return (
     <div className="fixed inset-0 -z-10 h-full w-full pointer-events-none bg-black">
-      <Canvas camera={{ position: [0, 0, 4] }} dpr={[1, 2]}>
+      <Canvas camera={{ position: [0, 0, 4] }}>
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={1.5} color="#00ffff" />
         <pointLight position={[-10, -10, -10]} intensity={0.5} color="#8b5cf6" />

@@ -104,7 +104,7 @@ export default function HomePage() {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.5 }}
+            viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.8 }}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-light text-sm text-brand-300 mb-8 backdrop-blur-3xl border-white/20"
           >
@@ -115,7 +115,7 @@ export default function HomePage() {
           <motion.h1
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: false, amount: 0.5 }}
+            viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.8, delay: 0.1 }}
             className="text-6xl md:text-8xl font-extrabold tracking-tight leading-[1.05] mb-6 drop-shadow-2xl"
           >
@@ -127,7 +127,7 @@ export default function HomePage() {
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.5 }}
+            viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl md:text-2xl text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed font-light drop-shadow-lg"
           >
@@ -139,7 +139,7 @@ export default function HomePage() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.5 }}
+            viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.8, delay: 0.3 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
