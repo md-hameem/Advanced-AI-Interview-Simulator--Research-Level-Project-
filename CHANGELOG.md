@@ -238,3 +238,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Planned
 - Dockerized deployment
 - WebRTC real-time bidirectional audio streaming for speech interactions
+
+---
+
+## [0.8.0] — 2026-03-16
+
+### 🎨 Added — Frontend 3D Modernization (Phase 10)
+
+#### Frontend
+- **3D Hero Section**: Added `Hero3D` component to the landing page featuring a React Three Fiber `Canvas` with an animated neural particle swarm and pulsing orb for a high-end AI aesthetic.
+- **3D AI Assistant Orb**: Replaced the static generic avatar in the interview session view with a React Three Fiber `AssistantOrb` that dynamically distorts and shifts colors based on AI state (listening, analyzing, speaking).
+- **Framer Motion Integration**: Wrapped the landing page sections, dashboard cards, and list elements in `motion.div` for smooth, scroll-triggered stagger animations and crossfades.
+- **Personalized Learning Plan UI**: Built a new glassmorphic page at `/dashboard/learning-plan` that parses the AI-generated study plan markdown, effectively closing the loop on Phase 9's backend functionality.

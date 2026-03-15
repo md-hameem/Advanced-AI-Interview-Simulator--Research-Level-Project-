@@ -407,6 +407,7 @@ ml/
 | ✅ | **Interviewer Personalities** | Google / Amazon / Startup styles |
 | ✅ | **Multi-Agent System** | Tech Lead, HR, and Coordinator evaluator agents |
 | ✅ | **Personalized Learning** | Adaptive study plan based on weakness patterns |
+| ✅ | **Frontend 3D Modernization** | React Three Fiber landing page + Framer Motion animations |
 
 ---
 
