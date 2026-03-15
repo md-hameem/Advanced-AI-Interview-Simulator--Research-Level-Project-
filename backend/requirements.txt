@@ -11,7 +11,7 @@ sqlalchemy==2.0.36
 aiosqlite==0.20.0
 
 # LLM
-groq==0.11.0
+groq>=0.13.0
 
 # Speech Processing
 openai-whisper==20240930

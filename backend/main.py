@@ -32,7 +32,7 @@ async def lifespan(app: FastAPI):
     init_db()
     logger.info("✅ Database initialized")
     logger.info(f"📡 LLM Model: {settings.LLM_MODEL}")
-    logger.info(f"🔑 Gemini API Key: {'configured' if settings.GEMINI_API_KEY else 'NOT SET'}")
+    logger.info(f"🔑 Groq API Key: {'configured' if settings.GROQ_API_KEY else 'NOT SET'}")
     yield
     logger.info("👋 Shutting down AI Interview Simulator")
 

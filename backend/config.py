@@ -18,7 +18,7 @@ class Settings(BaseSettings):
 
     # LLM Configuration
     GROQ_API_KEY: Optional[str] = None
-    LLM_MODEL: str = "llama3-70b-8192"
+    LLM_MODEL: str = "llama-3.3-70b-versatile"
     LLM_TEMPERATURE: float = 0.7
     LLM_MAX_TOKENS: int = 2048
 

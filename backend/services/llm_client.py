@@ -224,5 +224,20 @@ Return JSON:
 }}"""
 
 
+GENERATE_LEARNING_PLAN_PROMPT = """You are an expert career coach and technical mentor.
+Analyze the following aggregated weaknesses and feedback from the candidate's recent mock interviews.
+
+Candidate Name: {candidate_name}
+Target Role: {target_role}
+
+Recent Interview Weaknesses:
+{history_context}
+
+Create a highly actionable, personalized 4-week learning plan in Markdown format.
+Include recommended reading topics, practice areas, and specific actionable advice to address these recurring weaknesses.
+Do not use generic advice; tie everything back to the detected weaknesses.
+"""
+
+
 # Singleton
 llm_client = LLMClient()
