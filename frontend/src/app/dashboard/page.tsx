@@ -13,6 +13,7 @@ import {
   Plus,
   TrendingUp,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import {
   getAnalyticsOverview,
   getInterviews,
@@ -118,54 +119,52 @@ export default function DashboardPage() {
         ) : (
           <>
             {/* Stats Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="glass rounded-2xl p-6 animate-fade-in-up">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center">
-                    <Users size={20} className="text-violet-400" />
+            <motion.div 
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: { staggerChildren: 0.1 }
+                }
+              }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+            >
+              {[
+                { label: "Total Candidates", value: analytics?.total_candidates || 0, icon: Users, color: "violet" },
+                { label: "Completed Interviews", value: analytics?.completed_interviews || 0, icon: BarChart3, color: "cyan" },
+                { label: "Avg. Overall Score", value: (analytics?.average_scores?.overall || 0).toFixed(1), icon: TrendingUp, color: "emerald", score: analytics?.average_scores?.overall, max: 10 },
+                { label: "Avg. Technical Score", value: `${(analytics?.average_scores?.technical || 0).toFixed(1)}/5`, icon: Target, color: "amber", score: analytics?.average_scores?.technical, max: 5 },
+              ].map((stat, i) => (
+                <motion.div
+                  key={i}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 }
+                  }}
+                  className="glass rounded-2xl p-6"
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className={`w-10 h-10 rounded-xl bg-${stat.color}-500/10 flex items-center justify-center`}>
+                      <stat.icon size={20} className={`text-${stat.color}-400`} />
+                    </div>
                   </div>
-                </div>
-                <div className="text-3xl font-bold">{analytics?.total_candidates || 0}</div>
-                <div className="text-xs text-white/40 mt-0.5">Total Candidates</div>
-              </div>
-
-              <div className="glass rounded-2xl p-6 animate-fade-in-up" style={{ animationDelay: "0.05s" }}>
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center">
-                    <BarChart3 size={20} className="text-cyan-400" />
+                  <div className={`text-3xl font-bold ${stat.score !== undefined ? scoreColor(stat.score, stat.max!) : ""}`}>
+                    {stat.value}
                   </div>
-                </div>
-                <div className="text-3xl font-bold">{analytics?.completed_interviews || 0}</div>
-                <div className="text-xs text-white/40 mt-0.5">Completed Interviews</div>
-              </div>
-
-              <div className="glass rounded-2xl p-6 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-                    <TrendingUp size={20} className="text-emerald-400" />
-                  </div>
-                </div>
-                <div className={`text-3xl font-bold ${scoreColor(analytics?.average_scores?.overall || 0, 10)}`}>
-                  {(analytics?.average_scores?.overall || 0).toFixed(1)}
-                </div>
-                <div className="text-xs text-white/40 mt-0.5">Avg. Overall Score</div>
-              </div>
-
-              <div className="glass rounded-2xl p-6 animate-fade-in-up" style={{ animationDelay: "0.15s" }}>
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
-                    <Target size={20} className="text-amber-400" />
-                  </div>
-                </div>
-                <div className={`text-3xl font-bold ${scoreColor(analytics?.average_scores?.technical || 0, 5)}`}>
-                  {(analytics?.average_scores?.technical || 0).toFixed(1)}/5
-                </div>
-                <div className="text-xs text-white/40 mt-0.5">Avg. Technical Score</div>
-              </div>
-            </div>
+                  <div className="text-xs text-white/40 mt-0.5">{stat.label}</div>
+                </motion.div>
+              ))}
+            </motion.div>
 
             {/* Recent Interviews */}
-            <div className="glass rounded-2xl p-6 mb-6 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="glass rounded-2xl p-6 mb-6"
+            >
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-semibold flex items-center gap-2">
                   <Clock size={18} className="text-brand-400" />
@@ -236,11 +235,16 @@ export default function DashboardPage() {
                   })}
                 </div>
               )}
-            </div>
+            </motion.div>
 
             {/* Candidates */}
             {candidates.length > 0 && (
-              <div className="glass rounded-2xl p-6 animate-fade-in-up" style={{ animationDelay: "0.25s" }}>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="glass rounded-2xl p-6"
+              >
                 <h2 className="font-semibold flex items-center gap-2 mb-4">
                   <Users size={18} className="text-brand-400" />
                   Candidates
@@ -270,7 +274,7 @@ export default function DashboardPage() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             )}
           </>
         )}

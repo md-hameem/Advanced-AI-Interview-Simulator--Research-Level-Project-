@@ -280,6 +280,13 @@ export default function ReportPage({
             {downloading ? "Generating..." : "Download PDF"}
           </button>
           <Link
+            href={`/dashboard/learning-plan?interviewId=${report.interview_id}`}
+            className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+          >
+            <BookOpen size={18} />
+            View Learning Plan
+          </Link>
+          <Link
             href="/interview/new"
             className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold text-center hover:opacity-90 transition-opacity"
           >

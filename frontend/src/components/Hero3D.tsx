@@ -3,7 +3,6 @@
 import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial, Environment, Float, Sphere } from "@react-three/drei";
-import * as random from "math/random/dist/maath-random.esm";
 import * as THREE from "three";
 
 // Generates a floating field of "AI neural stars"

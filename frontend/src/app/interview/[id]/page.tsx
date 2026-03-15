@@ -3,6 +3,9 @@
 import { useState, useEffect, useRef, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const AssistantOrb = dynamic(() => import("@/components/AssistantOrb"), { ssr: false });
 import {
   Brain,
   Send,
@@ -371,8 +374,15 @@ export default function InterviewSessionPage({
       </header>
 
       {/* ── Chat Area ────────────────────────────────────────────── */}
-      <main className="flex-1 overflow-y-auto">
-        <div className="max-w-3xl mx-auto px-6 py-6 space-y-6">
+      <main className="flex-1 overflow-y-auto relative">
+        {/* Assistant Orb visually anchored at the top of the chat */}
+        <div className="w-full flex justify-center py-4 pointer-events-none">
+          <div className="pointer-events-auto">
+            <AssistantOrb isAnalyzing={submitting} isSpeaking={!submitting && !!currentQuestion && !completed} />
+          </div>
+        </div>
+
+        <div className="max-w-3xl mx-auto px-6 pb-6 space-y-6">
           {/* History */}
           {history.map((entry, i) => (
             <div key={i} className="space-y-3 animate-fade-in-up">

@@ -134,6 +134,15 @@ export const getInterviews = () =>
 export const getInterview = (id: string) =>
   api.get<Interview>(`/interviews/${id}`).then((r) => r.data);
 
+export const generateSignedS3Url = async (key: string) => {
+  const { data } = await api.post("/aws/sign-url", { key });
+  return data;
+};
+
+export const getLearningPlan = async (candidateId: string) => {
+  const { data } = await api.get(`/candidates/${candidateId}/learning-plan`);
+  return data;
+};
 // Interview Flow
 export const startInterview = (id: string) =>
   api.post<Question>(`/interviews/${id}/start`).then((r) => r.data);
