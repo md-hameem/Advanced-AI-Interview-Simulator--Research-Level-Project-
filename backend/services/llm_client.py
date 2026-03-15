@@ -6,7 +6,7 @@ import json
 import logging
 from typing import Optional
 
-import google.generativeai as genai
+from groq import AsyncGroq
 
 from config import settings
 
@@ -17,40 +17,54 @@ class LLMClient:
     """Abstracted LLM client for generating questions, evaluations, and feedback."""
 
     def __init__(self):
-        if not settings.GEMINI_API_KEY:
-            logger.warning("GEMINI_API_KEY not set — LLM features will be unavailable.")
-            self.model = None
+        if not settings.GROQ_API_KEY:
+            logger.warning("GROQ_API_KEY not set — LLM features will be unavailable.")
+            self.client = None
             return
 
-        genai.configure(api_key=settings.GEMINI_API_KEY)
-        self.model = genai.GenerativeModel(settings.LLM_MODEL)
+        self.client = AsyncGroq(api_key=settings.GROQ_API_KEY)
 
     async def generate(self, prompt: str, temperature: Optional[float] = None) -> str:
         """Generate a text response from the LLM."""
-        if not self.model:
-            raise RuntimeError("LLM not configured. Set GEMINI_API_KEY in .env file.")
-
-        config = genai.GenerationConfig(
-            temperature=temperature or settings.LLM_TEMPERATURE,
-            max_output_tokens=settings.LLM_MAX_TOKENS,
-        )
+        if not self.client:
+            raise RuntimeError("LLM not configured. Set GROQ_API_KEY in .env file.")
 
         try:
-            response = self.model.generate_content(prompt, generation_config=config)
-            return response.text
+            response = await self.client.chat.completions.create(
+                messages=[{"role": "user", "content": prompt}],
+                model=settings.LLM_MODEL,
+                temperature=temperature or settings.LLM_TEMPERATURE,
+                max_tokens=settings.LLM_MAX_TOKENS,
+            )
+            return response.choices[0].message.content
         except Exception as e:
             logger.error(f"LLM generation failed: {e}")
             raise
 
     async def generate_json(self, prompt: str, temperature: Optional[float] = None) -> dict:
         """Generate a JSON response from the LLM. Parses the result into a dict."""
-        json_prompt = f"""{prompt}
+        json_prompt = f"""{prompt}\n\nIMPORTANT: Return ONLY valid JSON. No markdown code blocks, no extra text. Just the JSON object."""
 
-IMPORTANT: Return ONLY valid JSON. No markdown code blocks, no extra text. Just the JSON object."""
+        if not self.client:
+            raise RuntimeError("LLM not configured. Set GROQ_API_KEY in .env file.")
 
-        raw = await self.generate(json_prompt, temperature=temperature or 0.3)
+        try:
+            response = await self.client.chat.completions.create(
+                messages=[
+                    {"role": "system", "content": "You are a helpful API that only returns valid JSON objects."},
+                    {"role": "user", "content": json_prompt}
+                ],
+                model=settings.LLM_MODEL,
+                temperature=temperature or 0.3,
+                max_tokens=settings.LLM_MAX_TOKENS,
+                response_format={"type": "json_object"}
+            )
+            raw = response.choices[0].message.content
+        except Exception as e:
+            logger.error(f"LLM generation failed: {e}")
+            raise
 
-        # Clean up common LLM response artifacts
+        # Clean up common LLM response artifacts if they bleed through
         cleaned = raw.strip()
         if cleaned.startswith("```json"):
             cleaned = cleaned[7:]

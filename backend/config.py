@@ -17,8 +17,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite:///./data/interview_simulator.db"
 
     # LLM Configuration
-    GEMINI_API_KEY: Optional[str] = None
-    LLM_MODEL: str = "gemini-2.0-flash"
+    GROQ_API_KEY: Optional[str] = None
+    LLM_MODEL: str = "llama3-70b-8192"
     LLM_TEMPERATURE: float = 0.7
     LLM_MAX_TOKENS: int = 2048
 
