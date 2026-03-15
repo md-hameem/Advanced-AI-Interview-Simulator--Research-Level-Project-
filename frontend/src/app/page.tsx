@@ -13,6 +13,9 @@ import {
   Target,
   Zap,
 } from "lucide-react";
+import dynamic from "next/dynamic";
+
+const Hero3D = dynamic(() => import("@/components/Hero3D"), { ssr: false });
 
 const features = [
   {
@@ -92,11 +95,12 @@ export default function HomePage() {
       </nav>
 
       {/* ── Hero ────────────────────────────────────────────────────── */}
-      <section className="relative pt-32 pb-20 px-6 overflow-hidden">
-        {/* Background effects */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full bg-brand-500/5 blur-[120px] pointer-events-none" />
-        <div className="absolute top-40 left-20 w-72 h-72 rounded-full bg-violet-500/5 blur-[100px] pointer-events-none" />
-        <div className="absolute top-60 right-20 w-72 h-72 rounded-full bg-cyan-500/5 blur-[100px] pointer-events-none" />
+      <section className="relative pt-32 pb-40 px-6 min-h-[90vh] flex flex-col justify-center overflow-hidden">
+        {/* 3D Background */}
+        <Hero3D />
+        
+        {/* Subtle glow overlays to complement the 3D scene */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full bg-brand-500/10 blur-[150px] pointer-events-none" />
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-light text-sm text-brand-300 mb-8 animate-fade-in-up">
