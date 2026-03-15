@@ -17,6 +17,9 @@
   --color-surface-800: oklch(0.21 0.02 260);
   --color-surface-700: oklch(0.28 0.02 260);
   --color-surface-600: oklch(0.35 0.015 260);
+  
+  /* Apple-Tier Black */
+  --bg-deep-black: #000000;
 
   --color-success: oklch(0.72 0.19 155);
   --color-warning: oklch(0.80 0.16 80);
@@ -31,7 +34,7 @@ html {
 
 body {
   font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-  background: var(--color-surface-950);
+  background: var(--bg-deep-black);
   color: oklch(0.92 0.01 260);
   min-height: 100vh;
 }

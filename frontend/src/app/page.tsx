@@ -16,7 +16,7 @@ import {
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 
-const Hero3D = dynamic(() => import("@/components/Hero3D"), { ssr: false });
+const Scroll3DScene = dynamic(() => import("@/components/Scroll3DScene"), { ssr: false });
 
 const features = [
   {
@@ -95,30 +95,29 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* ── Hero ────────────────────────────────────────────────────── */}
-      <section className="relative pt-32 pb-40 px-6 min-h-[90vh] flex flex-col justify-center overflow-hidden">
-        {/* 3D Background */}
-        <Hero3D />
-        
-        {/* Subtle glow overlays to complement the 3D scene */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full bg-brand-500/10 blur-[150px] pointer-events-none" />
+      {/* ── Global 3D Background ─────────────────────────────────────────── */}
+      <Scroll3DScene />
 
-        <div className="max-w-4xl mx-auto text-center relative z-10">
+      {/* ── Hero (Section 1) ────────────────────────────────────────────── */}
+      <section className="relative min-h-[100vh] flex flex-col justify-center px-6">
+        <div className="max-w-4xl mx-auto text-center relative z-10 pt-20">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.5 }}
             transition={{ duration: 0.8 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-light text-sm text-brand-300 mb-8"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-light text-sm text-brand-300 mb-8 backdrop-blur-3xl border-white/20"
           >
             <Sparkles size={14} />
             Research-Level AI System
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: false, amount: 0.5 }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1] mb-6"
+            className="text-6xl md:text-8xl font-extrabold tracking-tight leading-[1.05] mb-6 drop-shadow-2xl"
           >
             Master Your
             <br />
@@ -127,9 +126,10 @@ export default function HomePage() {
 
           <motion.p
             initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.5 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-lg md:text-xl text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed"
+            className="text-xl md:text-2xl text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed font-light drop-shadow-lg"
           >
             AI-powered interview simulator with adaptive questioning, multi-model
             evaluation, speech analysis, and professional candidate assessment
@@ -138,7 +138,8 @@ export default function HomePage() {
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.5 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
@@ -163,8 +164,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Stats ───────────────────────────────────────────────────── */}
-      <section className="py-12 px-6">
+      {/* ── Stats (Section 2) ───────────────────────────────────────────────── */}
+      <section className="relative min-h-[50vh] flex flex-col justify-center px-6 py-20 z-10">
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
           {stats.map((s, i) => (
             <motion.div
@@ -182,8 +183,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Features ────────────────────────────────────────────────── */}
-      <section className="py-20 px-6">
+      {/* ── Features (Section 3) ────────────────────────────────────────────── */}
+      <section className="relative min-h-[100vh] flex flex-col justify-center px-6 py-20 z-10">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -219,8 +220,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── How it Works ────────────────────────────────────────────── */}
-      <section className="py-20 px-6">
+      {/* ── How it Works (Section 4) ──────────────────────────────────────── */}
+      <section className="relative min-h-[100vh] flex flex-col justify-center px-6 py-20 z-10">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-14">
             How It <span className="gradient-text">Works</span>
@@ -274,8 +275,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── CTA ─────────────────────────────────────────────────────── */}
-      <section className="py-20 px-6 overflow-hidden">
+      {/* ── CTA (Section 5) ─────────────────────────────────────────────────── */}
+      <section className="relative min-h-[80vh] flex flex-col justify-center px-6 py-20 overflow-hidden z-10">
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
