@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* ─── Premium Design System ─────────────────────────────────────────── */
+/* ─── Cinematic Design System ────────────────────────────────────────── */
 
 @theme {
   --color-brand-50: oklch(0.97 0.02 260);
@@ -12,14 +12,11 @@
   --color-brand-600: oklch(0.47 0.22 260);
   --color-brand-700: oklch(0.40 0.18 260);
 
-  --color-surface-950: oklch(0.12 0.02 260);
-  --color-surface-900: oklch(0.16 0.02 260);
-  --color-surface-800: oklch(0.21 0.02 260);
-  --color-surface-700: oklch(0.28 0.02 260);
-  --color-surface-600: oklch(0.35 0.015 260);
-  
-  /* Apple-Tier Black */
-  --bg-deep-black: #000000;
+  --color-surface-950: oklch(0.06 0.01 260);
+  --color-surface-900: oklch(0.10 0.01 260);
+  --color-surface-800: oklch(0.14 0.01 260);
+  --color-surface-700: oklch(0.20 0.01 260);
+  --color-surface-600: oklch(0.28 0.01 260);
 
   --color-success: oklch(0.72 0.19 155);
   --color-warning: oklch(0.80 0.16 80);
@@ -29,51 +26,94 @@
 /* ─── Base ───────────────────────────────────────────────────────────── */
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto; /* Framer Motion handles smoothness */
 }
 
 body {
-  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-  background: var(--bg-deep-black);
-  color: oklch(0.92 0.01 260);
+  font-family: "Inter", "SF Pro Display", system-ui, -apple-system, sans-serif;
+  background: #000000;
+  color: #f5f5f7; /* Apple-style off-white */
   min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ─── Scrollbar ──────────────────────────────────────────────────────── */
+/* ─── Scrollbar (hidden for cinematic feel) ──────────────────────────── */
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 0px;
+  background: transparent;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--color-surface-900);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-surface-600);
-  border-radius: 999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-brand-500);
-}
-
-/* ─── Utilities ──────────────────────────────────────────────────────── */
+/* ─── Glassmorphism ──────────────────────────────────────────────────── */
 
 .glass {
-  background: oklch(0.18 0.02 260 / 0.7);
-  backdrop-filter: blur(16px);
-  border: 1px solid oklch(1 0 0 / 0.06);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.06);
 }
 
 .glass-light {
-  background: oklch(0.22 0.02 260 / 0.5);
-  backdrop-filter: blur(12px);
-  border: 1px solid oklch(1 0 0 / 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
 }
 
+/* ─── Bento Card ─────────────────────────────────────────────────────── */
+
+.bento-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.06);
+  border-radius: 24px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.4s ease,
+              box-shadow 0.4s ease;
+}
+
+.bento-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  padding: 0.5px;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.1) 0%,
+    transparent 50%,
+    rgba(255,255,255,0.05) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.bento-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.5),
+              0 0 40px rgba(99, 102, 241, 0.08);
+}
+
+/* ─── Gradient Text ──────────────────────────────────────────────────── */
+
 .gradient-text {
-  background: linear-gradient(135deg, var(--color-brand-300), var(--color-brand-500));
+  background: linear-gradient(135deg, #818cf8, #6366f1, #4f46e5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-cyan {
+  background: linear-gradient(135deg, #22d3ee, #06b6d4, #0891b2);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -86,73 +126,91 @@ body {
 }
 
 .glow-text {
-  text-shadow: 0 0 30px oklch(0.55 0.22 260 / 0.4);
+  text-shadow: 0 0 60px rgba(99, 102, 241, 0.5);
 }
 
-/* ─── Animations ─────────────────────────────────────────────────────── */
+/* ─── Mesh Gradient Background ───────────────────────────────────────── */
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes meshFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
 }
 
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 10px oklch(0.55 0.22 260 / 0.2);
-  }
-  50% {
-    box-shadow: 0 0 30px oklch(0.55 0.22 260 / 0.4);
-  }
+@keyframes meshFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-40px, 30px) scale(1.15); }
+  66% { transform: translate(25px, -40px) scale(0.95); }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+@keyframes meshFloat3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, 40px) scale(1.05); }
+  66% { transform: translate(-30px, -30px) scale(1.1); }
 }
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.5s ease-out forwards;
+.mesh-blob-1 {
+  animation: meshFloat1 20s ease-in-out infinite;
 }
 
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
+.mesh-blob-2 {
+  animation: meshFloat2 25s ease-in-out infinite;
 }
 
-.shimmer {
-  background: linear-gradient(
-    90deg,
-    oklch(0.25 0.02 260) 25%,
-    oklch(0.32 0.02 260) 50%,
-    oklch(0.25 0.02 260) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+.mesh-blob-3 {
+  animation: meshFloat3 18s ease-in-out infinite;
+}
+
+/* ─── Animated Gradient Border ───────────────────────────────────────── */
+
+@keyframes borderShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ─── Horizontal Scroll Section ──────────────────────────────────────── */
+
+.horizontal-scroll-container {
+  display: flex;
+  gap: 1.5rem;
+  width: max-content;
 }
 
 /* ─── Score Colors ───────────────────────────────────────────────────── */
 
-.score-excellent {
-  color: oklch(0.78 0.2 155);
+.score-excellent { color: oklch(0.78 0.2 155); }
+.score-good { color: oklch(0.8 0.16 130); }
+.score-average { color: oklch(0.82 0.16 80); }
+.score-poor { color: oklch(0.7 0.2 25); }
+
+/* ─── Animations ─────────────────────────────────────────────────────── */
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.score-good {
-  color: oklch(0.8 0.16 130);
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 10px oklch(0.55 0.22 260 / 0.2); }
+  50% { box-shadow: 0 0 30px oklch(0.55 0.22 260 / 0.4); }
 }
 
-.score-average {
-  color: oklch(0.82 0.16 80);
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
-.score-poor {
-  color: oklch(0.7 0.2 25);
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+
+.shimmer {
+  background: linear-gradient(90deg, oklch(0.25 0.02 260) 25%, oklch(0.32 0.02 260) 50%, oklch(0.25 0.02 260) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
