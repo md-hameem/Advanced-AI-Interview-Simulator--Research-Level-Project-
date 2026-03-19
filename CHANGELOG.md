@@ -241,6 +241,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.9.0] — 2026-03-20
+
+### 🎬 Overhauled — Cinematic Scrollytelling UI (Phase 12)
+
+#### Frontend
+- **Scrollytelling Architecture**: Complete landing page rewrite with scroll-driven animations using Framer Motion `useScroll`/`useTransform`. The hero section now features kinetic typography that scales and fades with parallax as the user scrolls.
+- **Bento Box Layout**: Asymmetric rounded-corner glassmorphism grid for features and stats, with CSS perspective hover tilt (`BentoCard.tsx`).
+- **Animated Counters**: Stats section numbers count up when scrolled into view.
+- **Horizontal Scroll Section**: "How It Works" steps scroll horizontally within the vertical page flow.
+- **Mesh Gradient Background**: Replaced WebGL 3D canvas with lightweight CSS-only animated gradient blobs (`MeshGradient.tsx`), eliminating all browser crashes.
+- **Floating Navbar**: Traditional navbar removed; minimal floating pill navbar fades in after hero scroll.
+- **Cinematic Aesthetics**: Deep `#000` background, hidden scrollbar, stronger glassmorphism (`blur(40px)`), and fluid `clamp()`-based typography.
+
+---
+
 ## [0.8.0] — 2026-03-16
 
 ### 🎨 Added — Frontend 3D Modernization (Phase 10)
