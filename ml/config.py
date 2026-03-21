@@ -16,11 +16,11 @@ MODEL_DIR = os.path.join(PROJECT_ROOT, "data", "ml_models")
 class AnswerQualityConfig:
     """DeBERTa-based answer quality scorer."""
     model_name: str = "microsoft/deberta-v3-small"
-    max_length: int = 512
+    max_length: int = 128
     num_labels: int = 1  # regression
     learning_rate: float = 2e-5
     batch_size: int = 16
-    epochs: int = 5
+    epochs: int = 2
     warmup_ratio: float = 0.1
     weight_decay: float = 0.01
     output_dir: str = os.path.join(MODEL_DIR, "answer_quality")
@@ -30,11 +30,11 @@ class AnswerQualityConfig:
 class CommunicationConfig:
     """DistilBERT-based communication clarity classifier."""
     model_name: str = "distilbert-base-uncased"
-    max_length: int = 384
+    max_length: int = 128
     num_labels: int = 3  # clarity, fluency, structure
     learning_rate: float = 3e-5
     batch_size: int = 16
-    epochs: int = 5
+    epochs: int = 2
     warmup_ratio: float = 0.1
     weight_decay: float = 0.01
     output_dir: str = os.path.join(MODEL_DIR, "communication")
@@ -44,11 +44,11 @@ class CommunicationConfig:
 class StarAnalyzerConfig:
     """DeBERTa-based STAR component detector."""
     model_name: str = "microsoft/deberta-v3-small"
-    max_length: int = 512
+    max_length: int = 128
     num_labels: int = 4  # S, T, A, R scores
     learning_rate: float = 2e-5
     batch_size: int = 16
-    epochs: int = 5
+    epochs: int = 2
     warmup_ratio: float = 0.1
     weight_decay: float = 0.01
     output_dir: str = os.path.join(MODEL_DIR, "star_analyzer")
@@ -58,11 +58,11 @@ class StarAnalyzerConfig:
 class CodeEvaluatorConfig:
     """CodeBERT-based code quality evaluator."""
     model_name: str = "microsoft/codebert-base"
-    max_length: int = 512
+    max_length: int = 128
     num_labels: int = 3  # quality, efficiency, style
     learning_rate: float = 2e-5
-    batch_size: int = 8
-    epochs: int = 5
+    batch_size: int = 4
+    epochs: int = 2
     warmup_ratio: float = 0.1
     weight_decay: float = 0.01
     output_dir: str = os.path.join(MODEL_DIR, "code_evaluator")
