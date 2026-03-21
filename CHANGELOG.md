@@ -241,6 +241,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.10.0] — 2026-03-22
+
+### 🧠 Overhauled — ML Training Pipeline (Phase 13)
+
+#### ML / Data Science
+- **Professional Dataset Exploration** (`01_dataset_exploration.ipynb`): Complete rewrite with 7 publication-quality figures — KDE overlays, donut charts, STAR radar plots, cross-dataset violin comparisons, correlation heatmaps, and per-question box plots. All figures auto-saved as 200 DPI PNGs to `data/figures/`.
+- **Advanced Model Training** (`02_model_training.ipynb`): Production-grade training pipeline with:
+  - Linear warmup + cosine annealing LR schedule
+  - Per-epoch train/val loss tracking with live training curves
+  - Patience-based early stopping with best-model checkpointing
+  - Advanced evaluation metrics: MSE, MAE, R², Spearman ρ per output dimension
+  - Scatter plots (Pred vs True) with regression lines for all 11 output dimensions
+  - Residual analysis histograms with bias annotations
+  - Final 5-model comparison dashboard
+  - Live inference demo on sample inputs
+  - 14+ training figures auto-saved to `data/figures/`
+- **Synthetic Dataset Generation**: 5 datasets totaling 10,500+ samples — Answer Quality (2,000), Communication (2,000), STAR Analyzer (2,000), Code Evaluator (1,500), Meta Scorer (3,000)
+- **DeBERTa-v3 Tokenizer Fix**: Switched from `AutoTokenizer` to `DebertaV2Tokenizer` for DeBERTa models, resolving SentencePiece fast-tokenizer conversion errors
+- **Dependency Fix**: Added `sentencepiece==0.2.1` to `requirements.txt`
+
+---
+
 ## [0.9.0] — 2026-03-20
 
 ### 🎬 Overhauled — Cinematic Scrollytelling UI (Phase 12)

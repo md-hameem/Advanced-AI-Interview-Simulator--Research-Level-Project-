@@ -332,26 +332,78 @@ jupyter notebook ml/01_dataset_exploration.ipynb
 
 ## 🧠 ML Pipeline
 
-Five specialized models trained via Jupyter notebooks with synthetic data generation and comprehensive visualizations.
+Five specialized transformer + ensemble models trained via professional Jupyter notebooks with synthetic data generation, advanced training techniques, and publication-quality visualizations.
 
-| Model | Architecture | Input | Output |
-|-------|-------------|-------|--------|
-| **Answer Quality** | `deberta-v3-small` | Question + Answer | Score 0-10 |
-| **Communication** | `distilbert-base` | Answer text | Clarity / Fluency / Structure |
-| **STAR Analyzer** | `deberta-v3-small` | Behavioral answer | S / T / A / R scores |
-| **Code Evaluator** | `microsoft/codebert` | Source code | Quality / Efficiency / Style |
-| **Meta Scorer** | `XGBoost` | 16 features | Final score 0-10 |
+| Model | Architecture | Input | Output | Params |
+|-------|-------------|-------|--------|--------|
+| **Answer Quality** | `deberta-v3-small` | Question + Answer | Score 0-10 | 44M |
+| **Communication** | `distilbert-base` | Answer text | Clarity / Fluency / Structure (0-5) | 66M |
+| **STAR Analyzer** | `deberta-v3-small` | Behavioral answer | S / T / A / R scores (0-5) | 44M |
+| **Code Evaluator** | `microsoft/codebert` | Source code | Quality / Efficiency / Style (0-5) | 125M |
+| **Meta Scorer** | `XGBoost` (200 trees) | 16-feature vector | Final score 0-10 | — |
+
+**Training Features:** Warmup + cosine LR scheduling · Early stopping with checkpointing · R²/Spearman/MAE metrics · Training curves · Residual analysis · 14+ auto-saved figures
 
 ```
 ml/
-├── 01_dataset_exploration.ipynb   # Generate + visualize all datasets
-├── 02_model_training.ipynb        # Train + evaluate + inference demo
+├── 01_dataset_exploration.ipynb   # Generate data + 7 professional visualizations
+├── 02_model_training.ipynb        # Advanced training + eval + inference demo
 ├── config.py                      # Hyperparameters for all models
-├── dataset.py                     # Synthetic data generators
+├── dataset.py                     # Synthetic data generators (10,500+ samples)
 ├── train.py                       # CLI: python -m ml.train --all
 ├── inference.py                   # Production inference service
 └── models/                        # 5 model definitions
+data/
+├── ml_training/                   # Generated JSON datasets
+└── figures/                       # Auto-saved visualization PNGs
 ```
+
+<details>
+<summary><b>📸 Dataset Visualizations</b> — click to expand</summary>
+
+<br/>
+
+**Dataset Overview — All 5 Target Score Distributions**
+
+![Dataset Overview](data/figures/00_dataset_overview.png)
+
+---
+
+**Answer Quality — Score Distribution, Quality Tiers, Score vs Length, Per-Question Analysis**
+
+![Answer Quality Analysis](data/figures/01_answer_quality_analysis.png)
+
+---
+
+**Communication Clarity — Clarity/Fluency/Structure KDE, Correlation Heatmap, Violin Plots**
+
+![Communication Analysis](data/figures/02_communication_analysis.png)
+
+---
+
+**STAR Behavioral Analyzer — Component Distributions, Radar Profile, Correlation Matrix**
+
+![STAR Analyzer Analysis](data/figures/03_star_analyzer_analysis.png)
+
+---
+
+**Code Evaluator — Quality/Efficiency/Style Distributions, Length Analysis, Correlations**
+
+![Code Evaluator Analysis](data/figures/04_code_evaluator_analysis.png)
+
+---
+
+**Meta Scorer — Final Score Distribution, Feature Correlations, 17×17 Heatmap**
+
+![Meta Scorer Analysis](data/figures/05_meta_scorer_analysis.png)
+
+---
+
+**Cross-Dataset Comparison — All Target Dimensions Normalized (Violin)**
+
+![Cross-Dataset Violin](data/figures/06_cross_dataset_violin.png)
+
+</details>
 
 > 📊 See [`ml/README.md`](ml/README.md) for dataset schemas, download links, and configuration details.
 
@@ -409,6 +461,7 @@ ml/
 | ✅ | **Personalized Learning** | Adaptive study plan based on weakness patterns |
 | ✅ | **Frontend 3D Modernization** | React Three Fiber landing page + Framer Motion animations |
 | ✅ | **Cinematic Scrollytelling** | Scroll-driven kinetic typography, Bento layouts, mesh gradients |
+| ✅ | **Advanced ML Training** | Professional notebooks with LR scheduling, early stopping, 21+ visualizations |
 
 ---
 
