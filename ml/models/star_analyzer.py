@@ -5,6 +5,7 @@ Architecture: DeBERTa-v3-small fine-tuned for multi-task regression (text → S/
 import torch
 import torch.nn as nn
 from transformers import AutoModel, AutoTokenizer
+from transformers import DebertaV2Tokenizer
 
 
 class StarAnalyzerModel(nn.Module):
@@ -51,7 +52,8 @@ class StarAnalyzerTrainer:
 
     def __init__(self, config):
         self.config = config
-        self.tokenizer = AutoTokenizer.from_pretrained(config.model_name)
+        # Use DebertaV2Tokenizer directly (AutoTokenizer fast conversion fails for DeBERTa-v3)
+        self.tokenizer = DebertaV2Tokenizer.from_pretrained(config.model_name)
         self.model = StarAnalyzerModel(config.model_name)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model.to(self.device)
