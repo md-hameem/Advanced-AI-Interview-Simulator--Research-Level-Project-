@@ -90,6 +90,7 @@ class EvaluationResponse(BaseModel):
     feedback: str
     strengths: list[str]
     weaknesses: list[str]
+    ml_scores: Optional[dict] = None
     next_question: Optional[QuestionResponse] = None
     interview_completed: bool = False
 

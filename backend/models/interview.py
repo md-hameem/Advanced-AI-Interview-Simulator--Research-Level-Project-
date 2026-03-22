@@ -129,6 +129,9 @@ class InterviewQuestion(Base):
     # Speech analytics (if audio provided)
     speech_metrics = Column(JSON, nullable=True)  # WPM, pauses, fillers, confidence
 
+    # ML evaluations mapping
+    ml_scores = Column(JSON, nullable=True)
+
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships

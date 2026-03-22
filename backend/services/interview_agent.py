@@ -113,6 +113,7 @@ class InterviewAgent:
         question.evaluation_feedback = evaluation["feedback"]
         question.strengths = evaluation["strengths"]
         question.weaknesses = evaluation["weaknesses"]
+        question.ml_scores = evaluation.get("ml_scores")
         db.commit()
 
         # Update interview context for adaptive difficulty
@@ -321,6 +322,29 @@ class InterviewAgent:
                 "strengths": [],
                 "weaknesses": [],
             }
+
+        # --- ML Model Evaluation Integration ---
+        try:
+            from ml.inference import get_ml_service
+            ml_service = get_ml_service()
+            ml_scores = {}
+            
+            answer_text = question.answer_text or ""
+            q_text = question.question_text or ""
+            
+            if answer_text.strip():
+                ml_scores["answer_quality"] = ml_service.predict_answer_quality(q_text, answer_text)
+                ml_scores["communication"] = ml_service.predict_communication(answer_text)
+                
+                if question.question_type == "behavioral":
+                    ml_scores["star"] = ml_service.predict_star(answer_text)
+                elif question.question_type == "coding":
+                    ml_scores["code"] = ml_service.predict_code_quality(answer_text)
+            
+            evaluation["ml_scores"] = ml_scores
+        except Exception as ml_err:
+            logger.error(f"Failed to fetch ML scores: {ml_err}")
+            evaluation["ml_scores"] = None
 
         return evaluation
 

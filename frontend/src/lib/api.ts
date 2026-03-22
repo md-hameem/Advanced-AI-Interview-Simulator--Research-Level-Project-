@@ -60,6 +60,7 @@ export interface Evaluation {
   feedback: string;
   strengths: string[];
   weaknesses: string[];
+  ml_scores?: Record<string, any>;
   next_question: Question | null;
   interview_completed: boolean;
 }

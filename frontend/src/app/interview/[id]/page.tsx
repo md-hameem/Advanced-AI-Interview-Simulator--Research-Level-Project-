@@ -450,58 +450,146 @@ export default function InterviewSessionPage({
 
                   {expandedEval === entry.question.id && (
                     <div className="mt-2 glass rounded-xl p-4 space-y-3 animate-fade-in-up text-sm">
-                      {/* Score bars */}
-                      <div className="grid grid-cols-2 gap-3">
-                        {[
-                          { label: "Correctness", val: entry.evaluation.correctness_score },
-                          { label: "Depth", val: entry.evaluation.depth_score },
-                          { label: "Clarity", val: entry.evaluation.clarity_score },
-                          { label: "Reasoning", val: entry.evaluation.reasoning_score },
-                        ].map((s) => (
-                          <div key={s.label}>
-                            <div className="flex justify-between text-xs mb-1">
-                              <span className="text-white/40">{s.label}</span>
-                              <span className={scoreColor(s.val, 5)}>{s.val}/5</span>
-                            </div>
-                            <div className="h-1.5 bg-surface-800 rounded-full overflow-hidden">
-                              <div
-                                className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-400"
-                                style={{ width: `${(s.val / 5) * 100}%` }}
-                              />
-                            </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Left: LLM Evaluation (Groq) */}
+                        <div className="space-y-3">
+                          <h4 className="text-xs font-semibold text-white/60 mb-3 uppercase tracking-wider">
+                            LLM Evaluation (Groq API)
+                          </h4>
+                          <div className="grid grid-cols-2 gap-3 mb-3">
+                            {[
+                              { label: "Correctness", val: entry.evaluation.correctness_score },
+                              { label: "Depth", val: entry.evaluation.depth_score },
+                              { label: "Clarity", val: entry.evaluation.clarity_score },
+                              { label: "Reasoning", val: entry.evaluation.reasoning_score },
+                            ].map((s) => (
+                              <div key={s.label}>
+                                <div className="flex justify-between text-xs mb-1">
+                                  <span className="text-white/40">{s.label}</span>
+                                  <span className={scoreColor(s.val, 5)}>{s.val}/5</span>
+                                </div>
+                                <div className="h-1.5 bg-surface-800 rounded-full overflow-hidden">
+                                  <div
+                                    className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-400"
+                                    style={{ width: `${(s.val / 5) * 100}%` }}
+                                  />
+                                </div>
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                          <p className="text-white/50 text-xs leading-relaxed">{entry.evaluation.feedback}</p>
+
+                          {entry.evaluation.strengths.length > 0 && (
+                            <div className="mt-2">
+                              <span className="text-[10px] font-medium text-emerald-400 uppercase tracking-wider">Strengths</span>
+                              <ul className="mt-1 space-y-0.5">
+                                {entry.evaluation.strengths.map((s, j) => (
+                                  <li key={j} className="text-xs text-white/40 flex items-start gap-1">
+                                    <CheckCircle2 size={10} className="text-emerald-400 mt-0.5 shrink-0" />
+                                    {s}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {entry.evaluation.weaknesses.length > 0 && (
+                            <div className="mt-2">
+                              <span className="text-[10px] font-medium text-amber-400 uppercase tracking-wider">Areas for improvement</span>
+                              <ul className="mt-1 space-y-0.5">
+                                {entry.evaluation.weaknesses.map((w, j) => (
+                                  <li key={j} className="text-xs text-white/40 flex items-start gap-1">
+                                    <AlertCircle size={10} className="text-amber-400 mt-0.5 shrink-0" />
+                                    {w}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Right: Local ML Evaluation */}
+                        {entry.evaluation.ml_scores && (
+                          <div className="space-y-4 pl-0 md:pl-6 border-t md:border-t-0 md:border-l border-white/5 pt-4 md:pt-0">
+                            <h4 className="text-xs font-semibold text-white/60 mb-2 uppercase tracking-wider">
+                              Local ML Evaluation
+                            </h4>
+                            
+                            {/* Answer Quality */}
+                            {entry.evaluation.ml_scores.answer_quality !== undefined && (
+                              <div>
+                                <div className="flex justify-between text-xs mb-1">
+                                  <span className="text-white/40">Answer Quality (DeBERTa)</span>
+                                  <span className={scoreColor(entry.evaluation.ml_scores.answer_quality, 10)}>{Number(entry.evaluation.ml_scores.answer_quality).toFixed(1)}/10</span>
+                                </div>
+                                <div className="h-1.5 bg-surface-800 rounded-full overflow-hidden">
+                                  <div className="h-full rounded-full bg-gradient-to-r from-purple-500 to-indigo-400" style={{ width: `${(Number(entry.evaluation.ml_scores.answer_quality) / 10) * 100}%` }} />
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Communication */}
+                            {entry.evaluation.ml_scores.communication && (
+                              <div>
+                                <span className="text-[10px] text-white/40 uppercase tracking-wider block mb-1.5">Communication (DistilBERT)</span>
+                                <div className="grid grid-cols-2 gap-2">
+                                  {Object.entries(entry.evaluation.ml_scores.communication).map(([key, val]) => (
+                                    <div key={key}>
+                                      <div className="flex justify-between text-[10px] mb-1">
+                                        <span className="text-white/40 capitalize">{key}</span>
+                                        <span className={scoreColor(val as number, 5)}>{Number(val).toFixed(1)}/5</span>
+                                      </div>
+                                      <div className="h-1 bg-surface-800 rounded-full overflow-hidden">
+                                        <div className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-blue-400" style={{ width: `${(Number(val) / 5) * 100}%` }} />
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* STAR Analyzer */}
+                            {entry.evaluation.ml_scores.star && (
+                                <div>
+                                  <span className="text-[10px] text-white/40 uppercase tracking-wider block mb-1.5">STAR Framework (DeBERTa)</span>
+                                  <div className="grid grid-cols-2 gap-2">
+                                    {Object.entries(entry.evaluation.ml_scores.star).map(([key, val]) => (
+                                      <div key={key}>
+                                        <div className="flex justify-between text-[10px] mb-1">
+                                          <span className="text-white/40 capitalize">{key}</span>
+                                          <span className={scoreColor(val as number, 5)}>{Number(val).toFixed(1)}/5</span>
+                                        </div>
+                                        <div className="h-1 bg-surface-800 rounded-full overflow-hidden">
+                                          <div className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400" style={{ width: `${(Number(val) / 5) * 100}%` }} />
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                            )}
+
+                            {/* Code Evaluator */}
+                            {entry.evaluation.ml_scores.code && (
+                                <div>
+                                  <span className="text-[10px] text-white/40 uppercase tracking-wider block mb-1.5">Code Analysis (CodeBERT)</span>
+                                  <div className="grid grid-cols-2 gap-2">
+                                    {Object.entries(entry.evaluation.ml_scores.code).map(([key, val]) => (
+                                      <div key={key}>
+                                        <div className="flex justify-between text-[10px] mb-1">
+                                          <span className="text-white/40 capitalize">{key}</span>
+                                          <span className={scoreColor(val as number, 5)}>{Number(val).toFixed(1)}/5</span>
+                                        </div>
+                                        <div className="h-1 bg-surface-800 rounded-full overflow-hidden">
+                                          <div className="h-full rounded-full bg-gradient-to-r from-orange-500 to-amber-400" style={{ width: `${(Number(val) / 5) * 100}%` }} />
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                            )}
+                          </div>
+                        )}
                       </div>
-
-                      <p className="text-white/50 text-xs leading-relaxed">{entry.evaluation.feedback}</p>
-
-                      {entry.evaluation.strengths.length > 0 && (
-                        <div>
-                          <span className="text-xs font-medium text-emerald-400">Strengths:</span>
-                          <ul className="mt-1 space-y-0.5">
-                            {entry.evaluation.strengths.map((s, j) => (
-                              <li key={j} className="text-xs text-white/40 flex items-start gap-1">
-                                <CheckCircle2 size={10} className="text-emerald-400 mt-0.5 shrink-0" />
-                                {s}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      {entry.evaluation.weaknesses.length > 0 && (
-                        <div>
-                          <span className="text-xs font-medium text-amber-400">Areas for improvement:</span>
-                          <ul className="mt-1 space-y-0.5">
-                            {entry.evaluation.weaknesses.map((w, j) => (
-                              <li key={j} className="text-xs text-white/40 flex items-start gap-1">
-                                <AlertCircle size={10} className="text-amber-400 mt-0.5 shrink-0" />
-                                {w}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
                     </div>
                   )}
                 </div>
