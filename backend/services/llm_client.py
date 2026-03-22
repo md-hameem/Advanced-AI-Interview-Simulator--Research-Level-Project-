@@ -1,6 +1,6 @@
 """
 Advanced AI Interview Simulator - LLM Client
-Abstracted LLM interface using Google Gemini.
+Abstracted LLM interface using Groq API.
 """
 import json
 import logging

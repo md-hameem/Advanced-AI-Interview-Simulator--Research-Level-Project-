@@ -13,7 +13,7 @@
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org)
-[![Gemini](https://img.shields.io/badge/Gemini-2.0-4285F4?style=flat-square&logo=google&logoColor=white)](https://ai.google.dev)
+[![Groq](https://img.shields.io/badge/Groq-2.0-4285F4?style=flat-square&logo=google&logoColor=white)](https://ai.google.dev)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.5-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org)
 [![HuggingFace](https://img.shields.io/badge/🤗_Transformers-4.47-FFD21E?style=flat-square)](https://huggingface.co)
 [![XGBoost](https://img.shields.io/badge/XGBoost-2.1-006600?style=flat-square)](https://xgboost.readthedocs.io)
@@ -159,7 +159,7 @@ Most interview simulators are glorified flashcard apps. This system creates a **
 <tr>
 <td align="center">FastAPI<br/>Pydantic<br/>Uvicorn</td>
 <td align="center">Next.js 16<br/>React 19<br/>Tailwind</td>
-<td align="center">Gemini 2.0<br/>Prompt Eng.<br/>JSON Mode</td>
+<td align="center">Groq 2.0<br/>Prompt Eng.<br/>JSON Mode</td>
 <td align="center">PyTorch<br/>Transformers<br/>XGBoost</td>
 <td align="center">Whisper<br/>librosa<br/>soundfile</td>
 <td align="center">SQLAlchemy<br/>SQLite<br/>Pydantic</td>
@@ -194,7 +194,7 @@ Most interview simulators are glorified flashcard apps. This system creates a **
 └───────────────────────────────────┬─────────────────────────────────────────┘
                ┌────────────────────┼────────────────────┐
        ┌───────▼────────┐  ┌───────▼────────┐  ┌────────▼───────┐
-       │  SQLite / PG   │  │ Google Gemini  │  │  ML Models     │
+       │  SQLite / PG   │  │ Groq API  │  │  ML Models     │
        │  (SQLAlchemy)  │  │  (LLM API)    │  │  (PyTorch)     │
        └────────────────┘  └────────────────┘  └────────────────┘
 ```
@@ -208,7 +208,7 @@ Most interview simulators are glorified flashcard apps. This system creates a **
 
 - Python 3.11+
 - Node.js 18+
-- [Google Gemini API key](https://aistudio.google.com/apikey) (free tier works)
+- [Groq API API key](https://aistudio.google.com/apikey) (free tier works)
 
 </details>
 
@@ -466,7 +466,7 @@ data/
 │   │   ├── behavioral.py              # STAR analysis
 │   │   └── ml.py                      # Model predictions
 │   └── services/
-│       ├── llm_client.py              # Gemini prompts
+│       ├── llm_client.py              # Groq prompts
 │       ├── interview_agent.py         # Adaptive logic
 │       ├── speech_processor.py        # Whisper + librosa
 │       ├── code_evaluator.py          # Sandbox + AST
@@ -523,7 +523,7 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![Next.js](https://img.shields.io/badge/Next.js-000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org)
-[![Gemini](https://img.shields.io/badge/Gemini-4285F4?style=flat-square&logo=google&logoColor=white)](https://ai.google.dev)
+[![Groq](https://img.shields.io/badge/Groq-4285F4?style=flat-square&logo=google&logoColor=white)](https://ai.google.dev)
 [![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org)
 [![HuggingFace](https://img.shields.io/badge/🤗_Transformers-FFD21E?style=flat-square)](https://huggingface.co)
 

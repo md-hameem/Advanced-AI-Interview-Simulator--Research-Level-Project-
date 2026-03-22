@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **FastAPI application** with CORS, lifecycle management, and Swagger docs at `/docs`
 - **SQLAlchemy database models**: `Candidate`, `Interview`, `InterviewQuestion` with full scoring fields
 - **Pydantic schemas** for type-safe request/response validation
-- **Google Gemini LLM client** with structured prompt templates for:
+- **Groq API LLM client** with structured prompt templates for:
   - Adaptive question generation
   - Rubric-based answer evaluation (correctness, depth, clarity, reasoning 0–5)
   - Follow-up question generation
@@ -107,7 +107,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Sandboxed code execution via subprocess (Python, JavaScript, TypeScript)
   - Test runner with flexible output comparison (literal, structural, case-insensitive)
   - AST-based complexity analysis (loop depth, recursion detection, sorting, auxiliary DS)
-  - LLM code review via Gemini (quality, correctness, efficiency, style scores)
+  - LLM code review via Groq (quality, correctness, efficiency, style scores)
   - 5 coding problems: Two Sum, Reverse Linked List, Valid Parentheses, Max Subarray, LRU Cache
 - **`routers/coding.py`** — 7 new API endpoints:
   - `GET /api/coding/questions` — List/filter coding problems

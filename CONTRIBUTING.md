@@ -9,7 +9,7 @@ Thank you for considering contributing to this project! Here's how you can help.
 - **Python** 3.11+
 - **Node.js** 18+
 - **npm** 9+
-- A **Google Gemini API key** ([get one free](https://aistudio.google.com/apikey))
+- A **Groq API API key** ([get one free](https://aistudio.google.com/apikey))
 
 ### Development Setup
 
@@ -25,7 +25,7 @@ venv\Scripts\activate        # Windows
 # source venv/bin/activate   # macOS/Linux
 pip install -r requirements.txt
 cp .env.example .env
-# Add your GEMINI_API_KEY to .env
+# Add your GROQ_API_KEY to .env
 
 # 3. Frontend setup
 cd ../frontend
