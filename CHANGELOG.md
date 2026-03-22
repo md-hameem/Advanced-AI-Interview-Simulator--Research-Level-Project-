@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Planned
+- Dockerized deployment
+- WebRTC real-time bidirectional audio streaming for speech interactions
+
+---
+
 ## [0.1.0] — 2026-03-12
 
 ### 🚀 Added
@@ -233,33 +241,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
 
-### Planned
-- Dockerized deployment
-- WebRTC real-time bidirectional audio streaming for speech interactions
-
----
 
 ## [0.10.0] — 2026-03-22
 
-### 🧠 Overhauled — ML Training Pipeline (Phase 13)
+### 🚀 Added
+- **Self-Contained Colab Notebook (`colab_training.ipynb`)**: All-in-one notebook for Google Colab T4 GPU with model definitions, dataset generators, training engine, evaluation charts, and inference demo inlined. No external imports required. Includes Google Drive auto-save.
+- **Trained Models (`ml/trained models/`)**: Saved 5 trained models (Answer Quality, Communication, STAR Analyzer, Code Evaluator, Meta Scorer) along with their respective tokenizers.
+- **Synthetic Datasets**: Increased dataset generation to 26,000+ samples (5,000 per main dataset) for maxed-out GPU training.
 
-#### ML / Data Science
-- **Professional Dataset Exploration** (`01_dataset_exploration.ipynb`): Complete rewrite with 7 publication-quality figures — KDE overlays, donut charts, STAR radar plots, cross-dataset violin comparisons, correlation heatmaps, and per-question box plots. All figures auto-saved as 200 DPI PNGs to `data/figures/`.
-- **Advanced Model Training** (`02_model_training.ipynb`): Production-grade training pipeline with:
+### 🔄 Changed (ML Training Pipeline Phase 13)
+- **Professional Dataset Exploration (`01_dataset_exploration.ipynb`)**: Complete rewrite with 7 publication-quality figures (KDE overlays, donut charts, STAR radar plots, cross-dataset violin comparisons, correlation heatmaps, per-question box plots) auto-saved to `data/figures/`.
+- **Advanced Model Training (`02_model_training.ipynb`)**: Professional training pipeline featuring:
   - Linear warmup + cosine annealing LR schedule
   - Per-epoch train/val loss tracking with live training curves
   - Patience-based early stopping with best-model checkpointing
-  - Advanced evaluation metrics: MSE, MAE, R², Spearman ρ per output dimension
-  - Scatter plots (Pred vs True) with regression lines for all 11 output dimensions
+  - Advanced evaluation metrics (MSE, MAE, R², Spearman ρ)
+  - Scatter plots (Pred vs True) with regression lines
   - Residual analysis histograms with bias annotations
   - Final 5-model comparison dashboard
-  - Live inference demo on sample inputs
-  - 14+ training figures auto-saved to `data/figures/`
-- **Synthetic Dataset Generation**: 5 datasets totaling 10,500+ samples — Answer Quality (2,000), Communication (2,000), STAR Analyzer (2,000), Code Evaluator (1,500), Meta Scorer (3,000)
-- **DeBERTa-v3 Tokenizer Fix**: Switched from `AutoTokenizer` to `DebertaV2Tokenizer` for DeBERTa models, resolving SentencePiece fast-tokenizer conversion errors
-- **Dependency Fix**: Added `sentencepiece==0.2.1` to `requirements.txt`
+- **Training Hyperparameters**: Maxed out settings for Colab T4 GPU (10 epochs per transformer model, 256-token sequences).
+
+### 🐛 Fixed
+- **DeBERTa-v3 Tokenization**: Switched from `AutoTokenizer` to `DebertaV2Tokenizer` and pinned `sentencepiece==0.2.1` in `requirements.txt` to resolve SentencePiece fast-tokenizer conversion errors.
+- **T4 GPU NaN Outputs**: Added `.float()` cast for DeBERTa models to force FP32 and prevent NaN outputs caused by native FP16 execution on Colab T4 GPUs.
 
 ---
 

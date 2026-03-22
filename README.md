@@ -342,17 +342,18 @@ Five specialized transformer + ensemble models trained via professional Jupyter 
 | **Code Evaluator** | `microsoft/codebert` | Source code | Quality / Efficiency / Style (0-5) | 125M |
 | **Meta Scorer** | `XGBoost` (200 trees) | 16-feature vector | Final score 0-10 | — |
 
-**Training Features:** Warmup + cosine LR scheduling · Early stopping with checkpointing · R²/Spearman/MAE metrics · Training curves · Residual analysis · 14+ auto-saved figures
+**Colab T4 GPU Training Specs:** 26,000+ synthetic samples · 10 epochs · 256 max sequence length · Warmup + cosine LR scheduling · Early stopping with checkpointing · 14+ auto-saved figures
 
 ```
 ml/
 ├── 01_dataset_exploration.ipynb   # Generate data + 7 professional visualizations
-├── 02_model_training.ipynb        # Advanced training + eval + inference demo
+├── 02_model_training.ipynb        # Local modular pipeline (CPU/MPS)
+├── colab_training.ipynb           # Self-contained all-in-one notebook for T4 GPU
 ├── config.py                      # Hyperparameters for all models
-├── dataset.py                     # Synthetic data generators (10,500+ samples)
+├── dataset.py                     # Synthetic data generators (26,000+ samples)
 ├── train.py                       # CLI: python -m ml.train --all
 ├── inference.py                   # Production inference service
-└── models/                        # 5 model definitions
+└── models/                        # 5 model architectures
 data/
 ├── ml_training/                   # Generated JSON datasets
 └── figures/                       # Auto-saved visualization PNGs
@@ -402,6 +403,45 @@ data/
 **Cross-Dataset Comparison — All Target Dimensions Normalized (Violin)**
 
 ![Cross-Dataset Violin](data/figures/06_cross_dataset_violin.png)
+
+</details>
+
+<details>
+<summary><b>📈 ML Training Performance & Analysis</b> — click to expand</summary>
+
+<br/>
+
+**Model 1: Answer Quality (DeBERTa-v3-small)**
+*Training loss vs Validation loss with Cosine LR schedule. Pred vs True scatter shows regression line and Spearman correlation for the 0-10 score output.*
+![Answer Quality Curves](ml/figures/train_01_aq_curves.png)
+![Answer Quality Predictions](ml/figures/train_02_aq_preds.png)
+
+---
+
+**Model 2: Communication Clarity (DistilBERT)**
+*Multi-head prediction (Clarity, Fluency, Structure). Evaluation charts display individual MSE, R², and Spearman ρ bounds for each dimension.*
+![Communication Curves](ml/figures/train_03_comm_curves.png)
+![Communication Predictions](ml/figures/train_04_comm_preds.png)
+
+---
+
+**Model 3: STAR Behavioral Analyzer (DeBERTa-v3-small)**
+*4-head behavioral dimension outputs (Situation, Task, Action, Result). 10 epochs on Colab T4 GPU.*
+![STAR Analyzer Curves](ml/figures/train_05_star_curves.png)
+![STAR Analyzer Predictions](ml/figures/train_06_star_preds.png)
+
+---
+
+**Model 4: Code Evaluator (CodeBERT)**
+*Source code analysis mapped to 3 continuous dimensions (Quality, Efficiency, Style). Scatter plots indicate strong linear correlation between predictions and ground truth labels.*
+![Code Evaluator Curves](ml/figures/train_07_code_curves.png)
+![Code Evaluator Predictions](ml/figures/train_08_code_preds.png)
+
+---
+
+**Model 5: Meta Scorer (XGBoost Ensemble)**
+*16-feature vector mapping to the Final Evaluation Score. Feature Importance chart highlights the most critical factors influencing the overall rating.*
+![Meta Scorer Evaluation](ml/figures/train_09_meta_eval.png)
 
 </details>
 
