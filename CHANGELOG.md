@@ -7,11 +7,223 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [0.8.0] — 2026-03-16
 
-### Planned
-- Dockerized deployment
-- WebRTC real-time bidirectional audio streaming for speech interactions
+### 🎨 Added — Frontend 3D Modernization (Phase 10)
+
+#### Frontend
+- **3D Hero Section**: Added `Hero3D` component to the landing page featuring a React Three Fiber `Canvas` with an animated neural particle swarm and pulsing orb for a high-end AI aesthetic.
+- **3D AI Assistant Orb**: Replaced the static generic avatar in the interview session view with a React Three Fiber `AssistantOrb` that dynamically distorts and shifts colors based on AI state (listening, analyzing, speaking).
+- **Framer Motion Integration**: Wrapped the landing page sections, dashboard cards, and list elements in `motion.div` for smooth, scroll-triggered stagger animations and crossfades.
+- **Personalized Learning Plan UI**: Built a new glassmorphic page at `/dashboard/learning-plan` that parses the AI-generated study plan markdown, effectively closing the loop on Phase 9's backend functionality.
+## [0.9.0] — 2026-03-20
+
+### 🎬 Overhauled — Cinematic Scrollytelling UI (Phase 12)
+
+#### Frontend
+- **Scrollytelling Architecture**: Complete landing page rewrite with scroll-driven animations using Framer Motion `useScroll`/`useTransform`. The hero section now features kinetic typography that scales and fades with parallax as the user scrolls.
+- **Bento Box Layout**: Asymmetric rounded-corner glassmorphism grid for features and stats, with CSS perspective hover tilt (`BentoCard.tsx`).
+- **Animated Counters**: Stats section numbers count up when scrolled into view.
+- **Horizontal Scroll Section**: "How It Works" steps scroll horizontally within the vertical page flow.
+- **Mesh Gradient Background**: Replaced WebGL 3D canvas with lightweight CSS-only animated gradient blobs (`MeshGradient.tsx`), eliminating all browser crashes.
+- **Floating Navbar**: Traditional navbar removed; minimal floating pill navbar fades in after hero scroll.
+- **Cinematic Aesthetics**: Deep `#000` background, hidden scrollbar, stronger glassmorphism (`blur(40px)`), and fluid `clamp()`-based typography.
+
+---
+
+## [0.10.0] — 2026-03-22
+
+### 🚀 Added
+- **Self-Contained Colab Notebook (`colab_training.ipynb`)**: All-in-one notebook for Google Colab T4 GPU with model definitions, dataset generators, training engine, evaluation charts, and inference demo inlined. No external imports required. Includes Google Drive auto-save.
+- **Trained Models (`ml/trained models/`)**: Saved 5 trained models (Answer Quality, Communication, STAR Analyzer, Code Evaluator, Meta Scorer) along with their respective tokenizers.
+- **Synthetic Datasets**: Increased dataset generation to 26,000+ samples (5,000 per main dataset) for maxed-out GPU training.
+
+### 🔄 Changed (ML Training Pipeline Phase 13)
+- **Professional Dataset Exploration (`01_dataset_exploration.ipynb`)**: Complete rewrite with 7 publication-quality figures (KDE overlays, donut charts, STAR radar plots, cross-dataset violin comparisons, correlation heatmaps, per-question box plots) auto-saved to `data/figures/`.
+- **Advanced Model Training (`02_model_training.ipynb`)**: Professional training pipeline featuring:
+  - Linear warmup + cosine annealing LR schedule
+  - Per-epoch train/val loss tracking with live training curves
+  - Patience-based early stopping with best-model checkpointing
+  - Advanced evaluation metrics (MSE, MAE, R², Spearman ρ)
+  - Scatter plots (Pred vs True) with regression lines
+  - Residual analysis histograms with bias annotations
+  - Final 5-model comparison dashboard
+- **Training Hyperparameters**: Maxed out settings for Colab T4 GPU (10 epochs per transformer model, 256-token sequences).
+
+### 🐛 Fixed
+- **DeBERTa-v3 Tokenization**: Switched from `AutoTokenizer` to `DebertaV2Tokenizer` and pinned `sentencepiece==0.2.1` in `requirements.txt` to resolve SentencePiece fast-tokenizer conversion errors.
+- **T4 GPU NaN Outputs**: Added `.float()` cast for DeBERTa models to force FP32 and prevent NaN outputs caused by native FP16 execution on Colab T4 GPUs.
+
+---
+
+## [0.7.0] — 2026-03-13
+
+### 🤖 Added — Advanced Interview Features (Phase 9)
+
+#### Backend
+- **AI Interviewer Personalities**: Custom LLM instructions for `Default`, `Google`, `Amazon`, and `Startup` personas, automatically adjusting rigorousness, follow-ups, and interaction style.
+- **Multi-Agent Evaluation Panel**: Refactored evaluation logic in `multi_agent.py` introducing a panel of parallel evaluators: `Tech Lead` (technical depth/accuracy) and `HR Agent` (communication/clarity), with a `Coordinator` agent to aggregate unified feedback.
+- **Emotion Tracking**: New `emotion_detector.py` service using OpenCV and DeepFace (optional) to measure candidate stress and confidence levels from webcam frames mapped to a `/api/vision/analyze-frame/` endpoint.
+- **Personalized Learning Feedback**: Added `/api/candidates/{id}/learning-plan` to aggregate recurring weaknesses from past interviews and generate a customized 4-week study plan via the LLM.
+
+#### Frontend
+- **Interviewer Persona Selector**: New dynamic grid selector added to the interview configuration screen (`/interview/new`) allowing candidates to select their interviewer style before starting.
+- **Webcam Emotion Tracking**: Integrated `useWebcam` React hook providing a Picture-in-Picture (PIP) UI in the interview session to silently capture video frames and stream semantic emotion telemetry to the backend evaluator.
+
+---
+
+
+
+## [0.6.0] — 2026-03-13
+
+### 🧠 Added — ML Model Training Pipeline (Module 8)
+
+#### Training Infrastructure (`ml/`)
+- **`config.py`** — Centralized hyperparameters for all 5 models (learning rates, architectures, batch sizes)
+- **`dataset.py`** — Synthetic dataset generator (CLI: `python -m ml.dataset`):
+  - Answer quality (Q+A → score), Communication (text → clarity/fluency/structure)
+  - STAR behavioral (text → S/T/A/R scores), Code evaluator (code → quality/efficiency/style)
+  - Meta-scorer (16-feature vector → final score)
+- **`train.py`** — Unified training CLI (`python -m ml.train --all --epochs 5`):
+  - Train individual or all models, auto-generate datasets, save training reports
+
+#### 5 Specialized Models (`ml/models/`)
+- **`answer_quality.py`** — DeBERTa-v3-small → regression (0-10 answer score)
+- **`communication.py`** — DistilBERT → multi-head (clarity/fluency/structure)
+- **`star_analyzer.py`** — DeBERTa-v3-small → 4-head STAR detection (S/T/A/R)
+- **`code_evaluator.py`** — CodeBERT → multi-head (quality/efficiency/style)
+- **`meta_scorer.py`** — XGBoost aggregator (16 features → final score), feature importance
+
+#### Inference & API
+- **`inference.py`** — Production inference service with lazy model loading
+- **`routers/ml.py`** — 5 new API endpoints:
+  - `GET /api/ml/status` — Model availability
+  - `POST /api/ml/predict/answer-quality` — DeBERTa answer scoring
+  - `POST /api/ml/predict/communication` — Communication dimensions
+  - `POST /api/ml/predict/star` — STAR component detection
+  - `POST /api/ml/predict/code-quality` — Code quality assessment
+
+#### Jupyter Notebooks
+- **`01_dataset_exploration.ipynb`** — Data generation + visualization:
+  - Score distributions, correlation heatmaps, STAR radar chart, code quality scatter
+  - Meta-scorer feature analysis, cross-dataset summary table
+- **`02_model_training.ipynb`** — Full training + evaluation:
+  - Per-model training with pred-vs-true scatter plots, residual distributions
+  - XGBoost feature importance, training summary comparison, inference demo
+
+#### Documentation
+- **`ml/README.md`** — Comprehensive ML docs:
+  - Per-dataset schema tables (fields, types, ranges, distributions)
+  - Dataset download links (SQuAD, CoQA, HumanEval, CodeXGLUE, ASAP-AES)
+  - Pre-trained model weights (Hugging Face links)
+  - Quick start (notebooks, CLI, Python API), config reference
+
+---
+
+## [0.5.0] — 2026-03-13
+
+### 📄 Added — PDF Report Export (Module 7)
+
+#### Backend
+- **`pdf_generator.py`** — Professional PDF report using ReportLab:
+  - Branded header with candidate info and date
+  - Large overall score display with color coding
+  - Category score breakdown (Technical, Communication, Problem Solving) with visual bars
+  - Recommendation badge (Strong Hire / Hire / Lean No / No Hire)
+  - Two-column strengths & weaknesses layout
+  - Question-by-question scores table with per-dimension breakdown
+  - Detailed feedback and study recommendations section
+  - Branded footer with generation timestamp
+- **`GET /api/interviews/{id}/report/pdf`** — Streams PDF as downloadable file
+
+#### Frontend
+- **Download PDF button** on report page (`/interview/[id]/report`)
+  - Cyan gradient button with loading spinner
+  - Fetches PDF as blob and triggers browser download
+  - Error handling with user feedback
+
+---
+
+## [0.4.0] — 2026-03-12
+
+### 🎯 Added — Behavioral Interview Analyzer (Module 6)
+
+#### Backend
+- **`behavioral_analyzer.py`** — Full STAR analysis pipeline:
+  - Rule-based STAR component detection (60+ keyword indicators across S/T/A/R)
+  - 12-question behavioral bank across 8 competencies (leadership, teamwork, conflict resolution, problem solving, communication, adaptability, ownership, initiative)
+  - LLM-based deep STAR analysis with per-component scores and summaries
+  - Competency, communication, specificity, and impact scoring
+  - Red flag detection (vague answers, hypothetical, blaming)
+- **`routers/behavioral.py`** — 6 new API endpoints:
+  - `GET /api/behavioral/competencies` — List competencies
+  - `GET /api/behavioral/questions` — List/filter behavioral questions
+  - `GET /api/behavioral/questions/{id}` — Get question with follow-ups
+  - `GET /api/behavioral/random` — Random question by competency/difficulty
+  - `POST /api/behavioral/detect-star` — Quick STAR detection (no LLM)
+  - `POST /api/behavioral/analyze/{id}` — Full STAR + competency analysis
+
+#### Frontend
+- **Behavioral Practice page** (`/behavioral`) — Premium UI:
+  - Competency-grouped question cards with color-coded icons
+  - STAR method tip banner
+  - Visual STAR component analysis (S/T/A/R scores, confidence badges, summaries)
+  - Additional assessment (competency, communication, specificity, impact)
+  - Strengths, improvements, red flags, and follow-up questions display
+
+---
+
+## [0.3.0] — 2026-03-12
+
+### 💻 Added — Coding Interview Evaluator (Module 5)
+
+#### Backend
+- **`code_evaluator.py`** — Full code evaluation pipeline:
+  - Sandboxed code execution via subprocess (Python, JavaScript, TypeScript)
+  - Test runner with flexible output comparison (literal, structural, case-insensitive)
+  - AST-based complexity analysis (loop depth, recursion detection, sorting, auxiliary DS)
+  - LLM code review via Groq (quality, correctness, efficiency, style scores)
+  - 5 coding problems: Two Sum, Reverse Linked List, Valid Parentheses, Max Subarray, LRU Cache
+- **`routers/coding.py`** — 7 new API endpoints:
+  - `GET /api/coding/questions` — List/filter coding problems
+  - `GET /api/coding/questions/{id}` — Get problem with starter code
+  - `GET /api/coding/random` — Random problem by difficulty
+  - `POST /api/coding/execute` — Run code (sandboxed)
+  - `POST /api/coding/test/{id}` — Run test cases
+  - `POST /api/coding/evaluate/{id}` — Full evaluation (tests + complexity + LLM review)
+  - `POST /api/coding/complexity` — Static complexity analysis
+
+#### Frontend
+- **Coding Practice page** (`/coding`) — 3-pane IDE layout:
+  - Left: problem list, description with formatted markdown, test count, optimal complexity
+  - Center: Monaco Editor with Python/JavaScript toggle, syntax highlighting
+  - Bottom: Results panel with Run output, expandable test results, complexity comparison, LLM review scores
+
+---
+
+## [0.2.0] — 2026-03-12
+
+### 🎙️ Added — Speech Intelligence (Module 2)
+
+#### Backend
+- **`speech_processor.py`** — Full speech analysis pipeline:
+  - OpenAI Whisper ASR transcription (lazy-loaded model)
+  - Filler word detection (um, uh, like, you know, etc.)
+  - Pause analysis from segment timing (>500ms gaps)
+  - WPM (words-per-minute) calculation
+  - Librosa audio features (pitch F0, RMS energy, onset variability)
+  - Composite confidence score (0–1) based on speech characteristics
+- **`routers/speech.py`** — 3 new API endpoints:
+  - `POST /api/speech/transcribe` — Whisper transcription
+  - `POST /api/speech/analyze` — Full speech metrics
+  - `POST /api/speech/answer/{id}/{qid}` — Submit voice answer (transcribe + analyze + evaluate)
+
+#### Frontend
+- **`useAudioRecorder` hook** — MediaRecorder API with start/stop/pause/resume and error handling
+- **Voice/Type mode toggle** in interview session — switch between keyboard and microphone input
+- **Recording UI** — Live recording animation with duration timer and waveform visualization
+- **Speech metrics display** — WPM, confidence %, filler count shown on voice-answered bubbles
+- **Speech API client functions** — `submitSpeechAnswer()` and `analyzeSpeech()` in `api.ts`
 
 ---
 
@@ -72,223 +284,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.2.0] — 2026-03-12
+## [0.11.0] — 2026-03-23
 
-### 🎙️ Added — Speech Intelligence (Module 2)
-
-#### Backend
-- **`speech_processor.py`** — Full speech analysis pipeline:
-  - OpenAI Whisper ASR transcription (lazy-loaded model)
-  - Filler word detection (um, uh, like, you know, etc.)
-  - Pause analysis from segment timing (>500ms gaps)
-  - WPM (words-per-minute) calculation
-  - Librosa audio features (pitch F0, RMS energy, onset variability)
-  - Composite confidence score (0–1) based on speech characteristics
-- **`routers/speech.py`** — 3 new API endpoints:
-  - `POST /api/speech/transcribe` — Whisper transcription
-  - `POST /api/speech/analyze` — Full speech metrics
-  - `POST /api/speech/answer/{id}/{qid}` — Submit voice answer (transcribe + analyze + evaluate)
-
-#### Frontend
-- **`useAudioRecorder` hook** — MediaRecorder API with start/stop/pause/resume and error handling
-- **Voice/Type mode toggle** in interview session — switch between keyboard and microphone input
-- **Recording UI** — Live recording animation with duration timer and waveform visualization
-- **Speech metrics display** — WPM, confidence %, filler count shown on voice-answered bubbles
-- **Speech API client functions** — `submitSpeechAnswer()` and `analyzeSpeech()` in `api.ts`
+### 🚀 Added — ML Models UI Integration (Phase 14)
+- **Dual-Evaluation UI (`page.tsx`)**: The live interview session now features a beautifully redesigned, two-column interactive evaluation dropdown showing the Groq LLM assessment side-by-side with the Local Custom ML assessment.
+- **Backend ML Integration (`interview_agent.py`)**: The core evaluation agent now simultaneously queries the Groq API and intelligently routes the candidate's answer through local transformer models (`ml.inference`):
+    - **Answer Quality (DeBERTa)** & **Communication (DistilBERT)** run universally.
+    - **STAR Analyzer** conditionally runs for behavioral questions.
+    - **Code Evaluator (CodeBERT)** conditionally runs for coding questions.
+- **Persistent ML Scores**: Deployed a SQLite migration adding a flexible `ml_scores` JSON column to the `InterviewQuestion` schema, permanently saving both API assessments and local ML inference outputs for future analytical use.
 
 ---
 
-## [0.3.0] — 2026-03-12
+## [Unreleased]
 
-### 💻 Added — Coding Interview Evaluator (Module 5)
-
-#### Backend
-- **`code_evaluator.py`** — Full code evaluation pipeline:
-  - Sandboxed code execution via subprocess (Python, JavaScript, TypeScript)
-  - Test runner with flexible output comparison (literal, structural, case-insensitive)
-  - AST-based complexity analysis (loop depth, recursion detection, sorting, auxiliary DS)
-  - LLM code review via Groq (quality, correctness, efficiency, style scores)
-  - 5 coding problems: Two Sum, Reverse Linked List, Valid Parentheses, Max Subarray, LRU Cache
-- **`routers/coding.py`** — 7 new API endpoints:
-  - `GET /api/coding/questions` — List/filter coding problems
-  - `GET /api/coding/questions/{id}` — Get problem with starter code
-  - `GET /api/coding/random` — Random problem by difficulty
-  - `POST /api/coding/execute` — Run code (sandboxed)
-  - `POST /api/coding/test/{id}` — Run test cases
-  - `POST /api/coding/evaluate/{id}` — Full evaluation (tests + complexity + LLM review)
-  - `POST /api/coding/complexity` — Static complexity analysis
-
-#### Frontend
-- **Coding Practice page** (`/coding`) — 3-pane IDE layout:
-  - Left: problem list, description with formatted markdown, test count, optimal complexity
-  - Center: Monaco Editor with Python/JavaScript toggle, syntax highlighting
-  - Bottom: Results panel with Run output, expandable test results, complexity comparison, LLM review scores
+### Planned
+- Dockerized deployment
+- WebRTC real-time bidirectional audio streaming for speech interactions
 
 ---
 
-## [0.4.0] — 2026-03-12
-
-### 🎯 Added — Behavioral Interview Analyzer (Module 6)
-
-#### Backend
-- **`behavioral_analyzer.py`** — Full STAR analysis pipeline:
-  - Rule-based STAR component detection (60+ keyword indicators across S/T/A/R)
-  - 12-question behavioral bank across 8 competencies (leadership, teamwork, conflict resolution, problem solving, communication, adaptability, ownership, initiative)
-  - LLM-based deep STAR analysis with per-component scores and summaries
-  - Competency, communication, specificity, and impact scoring
-  - Red flag detection (vague answers, hypothetical, blaming)
-- **`routers/behavioral.py`** — 6 new API endpoints:
-  - `GET /api/behavioral/competencies` — List competencies
-  - `GET /api/behavioral/questions` — List/filter behavioral questions
-  - `GET /api/behavioral/questions/{id}` — Get question with follow-ups
-  - `GET /api/behavioral/random` — Random question by competency/difficulty
-  - `POST /api/behavioral/detect-star` — Quick STAR detection (no LLM)
-  - `POST /api/behavioral/analyze/{id}` — Full STAR + competency analysis
-
-#### Frontend
-- **Behavioral Practice page** (`/behavioral`) — Premium UI:
-  - Competency-grouped question cards with color-coded icons
-  - STAR method tip banner
-  - Visual STAR component analysis (S/T/A/R scores, confidence badges, summaries)
-  - Additional assessment (competency, communication, specificity, impact)
-  - Strengths, improvements, red flags, and follow-up questions display
-
----
-
-## [0.5.0] — 2026-03-13
-
-### 📄 Added — PDF Report Export (Module 7)
-
-#### Backend
-- **`pdf_generator.py`** — Professional PDF report using ReportLab:
-  - Branded header with candidate info and date
-  - Large overall score display with color coding
-  - Category score breakdown (Technical, Communication, Problem Solving) with visual bars
-  - Recommendation badge (Strong Hire / Hire / Lean No / No Hire)
-  - Two-column strengths & weaknesses layout
-  - Question-by-question scores table with per-dimension breakdown
-  - Detailed feedback and study recommendations section
-  - Branded footer with generation timestamp
-- **`GET /api/interviews/{id}/report/pdf`** — Streams PDF as downloadable file
-
-#### Frontend
-- **Download PDF button** on report page (`/interview/[id]/report`)
-  - Cyan gradient button with loading spinner
-  - Fetches PDF as blob and triggers browser download
-  - Error handling with user feedback
-
----
-
-## [0.6.0] — 2026-03-13
-
-### 🧠 Added — ML Model Training Pipeline (Module 8)
-
-#### Training Infrastructure (`ml/`)
-- **`config.py`** — Centralized hyperparameters for all 5 models (learning rates, architectures, batch sizes)
-- **`dataset.py`** — Synthetic dataset generator (CLI: `python -m ml.dataset`):
-  - Answer quality (Q+A → score), Communication (text → clarity/fluency/structure)
-  - STAR behavioral (text → S/T/A/R scores), Code evaluator (code → quality/efficiency/style)
-  - Meta-scorer (16-feature vector → final score)
-- **`train.py`** — Unified training CLI (`python -m ml.train --all --epochs 5`):
-  - Train individual or all models, auto-generate datasets, save training reports
-
-#### 5 Specialized Models (`ml/models/`)
-- **`answer_quality.py`** — DeBERTa-v3-small → regression (0-10 answer score)
-- **`communication.py`** — DistilBERT → multi-head (clarity/fluency/structure)
-- **`star_analyzer.py`** — DeBERTa-v3-small → 4-head STAR detection (S/T/A/R)
-- **`code_evaluator.py`** — CodeBERT → multi-head (quality/efficiency/style)
-- **`meta_scorer.py`** — XGBoost aggregator (16 features → final score), feature importance
-
-#### Inference & API
-- **`inference.py`** — Production inference service with lazy model loading
-- **`routers/ml.py`** — 5 new API endpoints:
-  - `GET /api/ml/status` — Model availability
-  - `POST /api/ml/predict/answer-quality` — DeBERTa answer scoring
-  - `POST /api/ml/predict/communication` — Communication dimensions
-  - `POST /api/ml/predict/star` — STAR component detection
-  - `POST /api/ml/predict/code-quality` — Code quality assessment
-
-#### Jupyter Notebooks
-- **`01_dataset_exploration.ipynb`** — Data generation + visualization:
-  - Score distributions, correlation heatmaps, STAR radar chart, code quality scatter
-  - Meta-scorer feature analysis, cross-dataset summary table
-- **`02_model_training.ipynb`** — Full training + evaluation:
-  - Per-model training with pred-vs-true scatter plots, residual distributions
-  - XGBoost feature importance, training summary comparison, inference demo
-
-#### Documentation
-- **`ml/README.md`** — Comprehensive ML docs:
-  - Per-dataset schema tables (fields, types, ranges, distributions)
-  - Dataset download links (SQuAD, CoQA, HumanEval, CodeXGLUE, ASAP-AES)
-  - Pre-trained model weights (Hugging Face links)
-  - Quick start (notebooks, CLI, Python API), config reference
-
----
-
-## [0.7.0] — 2026-03-13
-
-### 🤖 Added — Advanced Interview Features (Phase 9)
-
-#### Backend
-- **AI Interviewer Personalities**: Custom LLM instructions for `Default`, `Google`, `Amazon`, and `Startup` personas, automatically adjusting rigorousness, follow-ups, and interaction style.
-- **Multi-Agent Evaluation Panel**: Refactored evaluation logic in `multi_agent.py` introducing a panel of parallel evaluators: `Tech Lead` (technical depth/accuracy) and `HR Agent` (communication/clarity), with a `Coordinator` agent to aggregate unified feedback.
-- **Emotion Tracking**: New `emotion_detector.py` service using OpenCV and DeepFace (optional) to measure candidate stress and confidence levels from webcam frames mapped to a `/api/vision/analyze-frame/` endpoint.
-- **Personalized Learning Feedback**: Added `/api/candidates/{id}/learning-plan` to aggregate recurring weaknesses from past interviews and generate a customized 4-week study plan via the LLM.
-
-#### Frontend
-- **Interviewer Persona Selector**: New dynamic grid selector added to the interview configuration screen (`/interview/new`) allowing candidates to select their interviewer style before starting.
-- **Webcam Emotion Tracking**: Integrated `useWebcam` React hook providing a Picture-in-Picture (PIP) UI in the interview session to silently capture video frames and stream semantic emotion telemetry to the backend evaluator.
-
----
-
-
-
-## [0.10.0] — 2026-03-22
-
-### 🚀 Added
-- **Self-Contained Colab Notebook (`colab_training.ipynb`)**: All-in-one notebook for Google Colab T4 GPU with model definitions, dataset generators, training engine, evaluation charts, and inference demo inlined. No external imports required. Includes Google Drive auto-save.
-- **Trained Models (`ml/trained models/`)**: Saved 5 trained models (Answer Quality, Communication, STAR Analyzer, Code Evaluator, Meta Scorer) along with their respective tokenizers.
-- **Synthetic Datasets**: Increased dataset generation to 26,000+ samples (5,000 per main dataset) for maxed-out GPU training.
-
-### 🔄 Changed (ML Training Pipeline Phase 13)
-- **Professional Dataset Exploration (`01_dataset_exploration.ipynb`)**: Complete rewrite with 7 publication-quality figures (KDE overlays, donut charts, STAR radar plots, cross-dataset violin comparisons, correlation heatmaps, per-question box plots) auto-saved to `data/figures/`.
-- **Advanced Model Training (`02_model_training.ipynb`)**: Professional training pipeline featuring:
-  - Linear warmup + cosine annealing LR schedule
-  - Per-epoch train/val loss tracking with live training curves
-  - Patience-based early stopping with best-model checkpointing
-  - Advanced evaluation metrics (MSE, MAE, R², Spearman ρ)
-  - Scatter plots (Pred vs True) with regression lines
-  - Residual analysis histograms with bias annotations
-  - Final 5-model comparison dashboard
-- **Training Hyperparameters**: Maxed out settings for Colab T4 GPU (10 epochs per transformer model, 256-token sequences).
-
-### 🐛 Fixed
-- **DeBERTa-v3 Tokenization**: Switched from `AutoTokenizer` to `DebertaV2Tokenizer` and pinned `sentencepiece==0.2.1` in `requirements.txt` to resolve SentencePiece fast-tokenizer conversion errors.
-- **T4 GPU NaN Outputs**: Added `.float()` cast for DeBERTa models to force FP32 and prevent NaN outputs caused by native FP16 execution on Colab T4 GPUs.
-
----
-
-## [0.9.0] — 2026-03-20
-
-### 🎬 Overhauled — Cinematic Scrollytelling UI (Phase 12)
-
-#### Frontend
-- **Scrollytelling Architecture**: Complete landing page rewrite with scroll-driven animations using Framer Motion `useScroll`/`useTransform`. The hero section now features kinetic typography that scales and fades with parallax as the user scrolls.
-- **Bento Box Layout**: Asymmetric rounded-corner glassmorphism grid for features and stats, with CSS perspective hover tilt (`BentoCard.tsx`).
-- **Animated Counters**: Stats section numbers count up when scrolled into view.
-- **Horizontal Scroll Section**: "How It Works" steps scroll horizontally within the vertical page flow.
-- **Mesh Gradient Background**: Replaced WebGL 3D canvas with lightweight CSS-only animated gradient blobs (`MeshGradient.tsx`), eliminating all browser crashes.
-- **Floating Navbar**: Traditional navbar removed; minimal floating pill navbar fades in after hero scroll.
-- **Cinematic Aesthetics**: Deep `#000` background, hidden scrollbar, stronger glassmorphism (`blur(40px)`), and fluid `clamp()`-based typography.
-
----
-
-## [0.8.0] — 2026-03-16
-
-### 🎨 Added — Frontend 3D Modernization (Phase 10)
-
-#### Frontend
-- **3D Hero Section**: Added `Hero3D` component to the landing page featuring a React Three Fiber `Canvas` with an animated neural particle swarm and pulsing orb for a high-end AI aesthetic.
-- **3D AI Assistant Orb**: Replaced the static generic avatar in the interview session view with a React Three Fiber `AssistantOrb` that dynamically distorts and shifts colors based on AI state (listening, analyzing, speaking).
-- **Framer Motion Integration**: Wrapped the landing page sections, dashboard cards, and list elements in `motion.div` for smooth, scroll-triggered stagger animations and crossfades.
-- **Personalized Learning Plan UI**: Built a new glassmorphic page at `/dashboard/learning-plan` that parses the AI-generated study plan markdown, effectively closing the loop on Phase 9's backend functionality.

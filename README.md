@@ -121,12 +121,12 @@ Most interview simulators are glorified flashcard apps. This system creates a **
 </td>
 <td width="33%" valign="top">
 
-### 🧠 ML Model Pipeline
+### 🧠 Local ML Evaluation
+- **Dual-Model UI** alongside Groq API
 - **DeBERTa-v3** → answer quality (0-10)
-- **DistilBERT** → communication (3-head)
-- **CodeBERT** → code quality (3-head)
-- **XGBoost** → 16-feature meta-scorer
-- Jupyter notebooks with visualizations
+- **DistilBERT** → communication (Clarity, Fluency)
+- **CodeBERT** & **STAR Analyzer** targeting
+- Native inference side-by-side with API
 
 </td>
 <td width="33%" valign="top">
